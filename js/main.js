@@ -199,7 +199,6 @@ function initMediaModal() {
  */
 function initForms() {
   const contactForm = document.getElementById('contact-form');
-  const trackArtistForm = document.getElementById('track-artist-form');
   const toast = document.getElementById('toast-notification');
 
   function showToast(message) {
@@ -216,14 +215,6 @@ function initForms() {
       e.preventDefault();
       showToast('Thank you! Your message and booking inquiry has been received.');
       contactForm.reset();
-    });
-  }
-
-  if (trackArtistForm) {
-    trackArtistForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      showToast('You are now tracking tour dates! You will be notified when new shows are announced.');
-      trackArtistForm.reset();
     });
   }
 }
