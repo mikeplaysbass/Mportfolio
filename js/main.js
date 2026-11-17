@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initForms();
   initHeaderScroll();
   initAlbumCards();
+  initPhotoCarousel();
 });
 
 /**
@@ -72,36 +73,59 @@ function initMobileNav() {
   function openMenu() {
     navDialog.showModal();
     document.body.style.overflow = 'hidden';
+    openBtn.setAttribute('aria-expanded', 'true');
     closeBtn.focus();
   }
 
-  function closeMenu() {
+  function closeMenu(restoreFocus = true) {
+    if (!navDialog.open) return;
     navDialog.close();
     document.body.style.overflow = '';
-    openBtn.focus();
+    openBtn.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) {
+      openBtn.focus({ preventScroll: true });
+    }
   }
 
   openBtn.addEventListener('click', openMenu);
-  closeBtn.addEventListener('click', closeMenu);
+  closeBtn.addEventListener('click', () => closeMenu(true));
 
-  // Close when clicking mobile nav links
+  // Close when clicking mobile nav links and jump to that section
   navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      closeMenu();
+    link.addEventListener('click', (e) => {
+      const targetHash = link.getAttribute('href');
+      closeMenu(false);
+
+      if (targetHash && targetHash.startsWith('#')) {
+        const targetElement = document.querySelector(targetHash);
+        if (targetElement) {
+          e.preventDefault();
+          requestAnimationFrame(() => {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+            history.pushState(null, '', targetHash);
+          });
+        }
+      }
     });
   });
 
-  // Handle Escape key
-  navDialog.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeMenu();
-    }
+  // Handle native cancel (Escape key)
+  navDialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    closeMenu(true);
   });
 
-  // Close on backdrop click
+  // Close on backdrop click (clicking outside the side drawer)
   navDialog.addEventListener('click', (e) => {
-    if (e.target === navDialog) {
-      closeMenu();
+    const rect = navDialog.getBoundingClientRect();
+    const isInsideDrawer = (
+      rect.top <= e.clientY &&
+      e.clientY <= rect.top + rect.height &&
+      rect.left <= e.clientX &&
+      e.clientX <= rect.left + rect.width
+    );
+    if (!isInsideDrawer) {
+      closeMenu(true);
     }
   });
 }
@@ -139,6 +163,17 @@ function initTourFilters() {
 }
 
 /**
+ * Helper to detect mobile device viewports & touch capabilities
+ */
+function isMobileDevice() {
+  const ua = navigator.userAgent || '';
+  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  const isTouchScreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  const isNarrow = window.innerWidth <= 820;
+  return isMobileUA || (isTouchScreen && isNarrow);
+}
+
+/**
  * 3. Media Video Modal (Native <dialog>)
  */
 function initMediaModal() {
@@ -146,33 +181,114 @@ function initMediaModal() {
   const closeBtn = document.getElementById('close-modal-btn');
   const modalTitle = document.getElementById('modal-title');
   const modalFrame = document.getElementById('modal-video-frame');
+  const modalYoutubeBtn = document.getElementById('modal-youtube-btn');
+  const modalFallbackLink = document.getElementById('modal-fallback-link');
   const playButtons = document.querySelectorAll('.video-play-btn, .video-card');
 
   if (!modal || !closeBtn) return;
 
+  let currentVideoId = '';
+  let currentTitle = '';
+  let currentYtUrl = '';
+
+  function openYouTubeDirectly(url) {
+    const targetWin = window.open(url, '_blank');
+    if (!targetWin) {
+      window.location.href = url;
+    }
+  }
+
+  function showErrorFallback(title, ytUrl) {
+    modalFrame.innerHTML = `
+      <div style="width: 100%; min-height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0c0c0d; padding: 2rem; text-align: center; border-radius: 8px;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 0, 0, 0.12); color: #ff0000; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <p style="font-weight: 700; color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">${title}</p>
+        <p style="font-size: 0.95rem; color: #a1a1aa; max-width: 44ch; margin-bottom: 1.5rem; line-height: 1.4;">
+          This broadcast performance has embedded playback restrictions. Open directly in the YouTube app for uninterrupted full-quality viewing.
+        </p>
+        <a href="${ytUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; background: #ff0000; border-color: #ff0000; color: #fff; min-height: 48px; padding: 0.75rem 1.75rem; font-weight: 700; text-transform: uppercase;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          Open in YouTube App
+        </a>
+      </div>
+    `;
+  }
+
+  function handleVideoActivation(card) {
+    currentTitle = card.querySelector('.video-title')?.textContent || 'Live Performance';
+    currentVideoId = card.getAttribute('data-embed') || '';
+    currentYtUrl = card.getAttribute('data-youtube-url') || `https://www.youtube.com/watch?v=${encodeURIComponent(currentVideoId)}`;
+
+    // On mobile devices, YouTube restricts 3rd-party embedded playback for TV broadcasts (Kimmel, MTV).
+    // Launch directly in the YouTube app for native full-screen playback.
+    if (isMobileDevice()) {
+      openYouTubeDirectly(currentYtUrl);
+      return;
+    }
+
+    // On desktop / large viewports, open the native dialog player
+    modalTitle.textContent = currentTitle;
+    if (modalYoutubeBtn) {
+      modalYoutubeBtn.href = currentYtUrl;
+    }
+    if (modalFallbackLink) {
+      modalFallbackLink.href = currentYtUrl;
+    }
+
+    if (currentVideoId && currentVideoId.length === 11) {
+      modalFrame.innerHTML = `
+        <iframe 
+          id="active-youtube-iframe"
+          src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(currentVideoId)}?autoplay=1&rel=0&enablejsapi=1" 
+          title="${currentTitle.replace(/"/g, '&quot;')}" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+          allowfullscreen
+          style="width: 100%; height: 100%; min-height: 380px; border: none; aspect-ratio: 16/9; border-radius: 8px;"
+        ></iframe>
+      `;
+    } else {
+      showErrorFallback(currentTitle, currentYtUrl);
+    }
+
+    modal.showModal();
+    closeBtn.focus();
+  }
+
+  // Listen for YouTube postMessage errors (e.g. error 101, 150 = embedded playback disallowed)
+  window.addEventListener('message', (e) => {
+    try {
+      const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+      if (data && (data.event === 'onError' || (data.info && typeof data.info === 'number' && [2, 5, 100, 101, 150].includes(data.info)))) {
+        showErrorFallback(currentTitle, currentYtUrl);
+        if (isMobileDevice()) {
+          openYouTubeDirectly(currentYtUrl);
+        }
+      }
+    } catch (err) {}
+  });
+
   playButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-      // Find parent card if clicked inner button or card
       const card = btn.closest('.video-card');
       if (!card) return;
-
-      const title = card.querySelector('.video-title')?.textContent || 'Live Performance';
-      const videoEmbed = card.getAttribute('data-embed') || '';
-
-      modalTitle.textContent = title;
-      modalFrame.innerHTML = `
-        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0c0c0d; color: #a1a1aa; padding: 2rem; text-align: center;">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 1rem; color: var(--accent-gold);">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-          </svg>
-          <p style="font-weight: 700; color: #fff; font-size: 1.15rem; margin-bottom: 0.5rem;">${title}</p>
-          <p style="font-size: 0.9rem; max-width: 40ch;">Live recording stream ready. Replace with your official YouTube or Vimeo embed ID.</p>
-        </div>
-      `;
-
-      modal.showModal();
-      closeBtn.focus();
+      handleVideoActivation(card);
     });
+
+    // Keyboard activation for card elements with role="button"
+    if (btn.classList.contains('video-card')) {
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleVideoActivation(btn);
+        }
+      });
+    }
   });
 
   closeBtn.addEventListener('click', () => {
@@ -250,5 +366,282 @@ function initAlbumCards() {
       card.blur();
     });
   });
+}
+
+/**
+ * 7. Tour & Stage Photo Carousel / Slideshow & Lightbox
+ */
+function initPhotoCarousel() {
+  const stage = document.getElementById('carousel-3d-stage');
+  const prevBtn = document.getElementById('carousel-3d-prev');
+  const nextBtn = document.getElementById('carousel-3d-next');
+  const items = Array.from(document.querySelectorAll('.carousel-3d-item'));
+
+  const lightbox = document.getElementById('photo-lightbox-modal');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxCounter = document.getElementById('lightbox-counter');
+  const closeLightboxBtn = document.getElementById('close-lightbox-btn');
+  const lightboxPrevBtn = document.getElementById('lightbox-prev-btn');
+  const lightboxNextBtn = document.getElementById('lightbox-next-btn');
+
+  if (!stage || items.length === 0) return;
+
+  const total = items.length;
+  let activeIdx = 0;
+  let autoplayTimer = null;
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function formatIndex(idx) {
+    return String(idx + 1).padStart(2, '0');
+  }
+
+  function getResponsiveParams() {
+    const w = window.innerWidth;
+    if (w <= 480) {
+      return { step1: 44, step2: 78, step3: 105, scale1: 0.82, scale2: 0.68, scale3: 0.54, z1: -60, z2: -120, z3: -180 };
+    } else if (w <= 768) {
+      return { step1: 90, step2: 165, step3: 230, scale1: 0.85, scale2: 0.72, scale3: 0.58, z1: -70, z2: -140, z3: -210 };
+    } else if (w <= 1024) {
+      return { step1: 135, step2: 250, step3: 345, scale1: 0.86, scale2: 0.73, scale3: 0.60, z1: -80, z2: -160, z3: -240 };
+    } else {
+      return { step1: 175, step2: 320, step3: 435, scale1: 0.88, scale2: 0.75, scale3: 0.62, z1: -90, z2: -180, z3: -270 };
+    }
+  }
+
+  function update3DCarousel() {
+    const p = getResponsiveParams();
+    items.forEach((item, idx) => {
+      let offset = (idx - activeIdx + total) % total;
+      if (offset > total / 2) offset -= total;
+
+      const isActive = offset === 0;
+      item.classList.toggle('active', isActive);
+
+      if (isActive) {
+        item.style.transform = 'translate3d(-50%, -50%, 0) scale(1)';
+        item.style.zIndex = '10';
+        item.style.opacity = '1';
+        item.style.pointerEvents = 'auto';
+        item.setAttribute('aria-hidden', 'false');
+        item.setAttribute('tabindex', '0');
+      } else if (Math.abs(offset) === 1) {
+        const sign = offset > 0 ? 1 : -1;
+        item.style.transform = `translate3d(calc(-50% + ${sign * p.step1}px), -50%, ${p.z1}px) scale(${p.scale1})`;
+        item.style.zIndex = '8';
+        item.style.opacity = '0.88';
+        item.style.pointerEvents = 'auto';
+        item.setAttribute('aria-hidden', 'false');
+        item.setAttribute('tabindex', '0');
+      } else if (Math.abs(offset) === 2) {
+        const sign = offset > 0 ? 1 : -1;
+        item.style.transform = `translate3d(calc(-50% + ${sign * p.step2}px), -50%, ${p.z2}px) scale(${p.scale2})`;
+        item.style.zIndex = '6';
+        item.style.opacity = '0.70';
+        item.style.pointerEvents = 'auto';
+        item.setAttribute('aria-hidden', 'false');
+        item.setAttribute('tabindex', '0');
+      } else if (Math.abs(offset) === 3) {
+        const sign = offset > 0 ? 1 : -1;
+        item.style.transform = `translate3d(calc(-50% + ${sign * p.step3}px), -50%, ${p.z3}px) scale(${p.scale3})`;
+        item.style.zIndex = '4';
+        item.style.opacity = '0.45';
+        item.style.pointerEvents = 'auto';
+        item.setAttribute('aria-hidden', 'false');
+        item.setAttribute('tabindex', '0');
+      } else {
+        const sign = offset > 0 ? 1 : -1;
+        item.style.transform = `translate3d(calc(-50% + ${sign * (p.step3 + 80)}px), -50%, -360px) scale(0.38)`;
+        item.style.zIndex = '0';
+        item.style.opacity = '0';
+        item.style.pointerEvents = 'none';
+        item.setAttribute('aria-hidden', 'true');
+        item.setAttribute('tabindex', '-1');
+      }
+    });
+  }
+
+  function prevSlide() {
+    pauseAutoplay();
+    activeIdx = (activeIdx - 1 + total) % total;
+    update3DCarousel();
+  }
+
+  function nextSlide() {
+    pauseAutoplay();
+    activeIdx = (activeIdx + 1) % total;
+    update3DCarousel();
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', prevSlide);
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', nextSlide);
+  }
+
+  // Card interaction: side card brings to center, center card opens full lightbox
+  items.forEach((item, idx) => {
+    item.addEventListener('click', () => {
+      if (activeIdx !== idx) {
+        pauseAutoplay();
+        activeIdx = idx;
+        update3DCarousel();
+      } else {
+        openLightbox(idx);
+      }
+    });
+
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (activeIdx !== idx) {
+          pauseAutoplay();
+          activeIdx = idx;
+          update3DCarousel();
+        } else {
+          openLightbox(idx);
+        }
+      }
+    });
+  });
+
+  // Stage keyboard navigation
+  stage.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextSlide();
+    }
+  });
+
+  // Touch swipe support on stage
+  let touchStartX = 0;
+  let touchEndX = 0;
+  stage.addEventListener('touchstart', (e) => {
+    pauseAutoplay();
+    touchStartX = e.changedTouches[0].clientX;
+  }, { passive: true });
+
+  stage.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    const diff = touchEndX - touchStartX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    }
+  }, { passive: true });
+
+  // Responsive repositioning on resize
+  window.addEventListener('resize', () => {
+    update3DCarousel();
+  }, { passive: true });
+
+  // Autoplay
+  function startAutoplay() {
+    if (isReducedMotion || autoplayTimer) return;
+    autoplayTimer = setInterval(nextSlide, 5000);
+  }
+
+  function pauseAutoplay() {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  stage.addEventListener('mouseenter', pauseAutoplay);
+  stage.addEventListener('mouseleave', startAutoplay);
+  stage.addEventListener('focusin', pauseAutoplay);
+  stage.addEventListener('focusout', startAutoplay);
+  startAutoplay();
+
+  // Lightbox Implementation
+  let activeLightboxIdx = 0;
+
+  function openLightbox(idx) {
+    if (!lightbox || !lightboxImg) return;
+    pauseAutoplay();
+    activeLightboxIdx = Math.max(0, Math.min(total - 1, idx));
+    const item = items[activeLightboxIdx];
+    if (!item) return;
+
+    const img = item.querySelector('.carousel-3d-img');
+    const src = img ? (img.currentSrc || img.src) : '';
+    const alt = img ? img.alt : '';
+
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    if (lightboxCaption) {
+      lightboxCaption.textContent = alt || `Tour Photo ${formatIndex(activeLightboxIdx)}`;
+    }
+    if (lightboxCounter) {
+      lightboxCounter.textContent = `${formatIndex(activeLightboxIdx)} / ${formatIndex(total - 1)}`;
+    }
+
+    lightbox.showModal();
+    if (closeLightboxBtn) closeLightboxBtn.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox || !lightbox.open) return;
+    lightbox.close();
+    if (lightboxImg) lightboxImg.src = '';
+  }
+
+  if (closeLightboxBtn) {
+    closeLightboxBtn.addEventListener('click', closeLightbox);
+  }
+
+  if (lightboxPrevBtn) {
+    lightboxPrevBtn.addEventListener('click', () => {
+      const prev = activeLightboxIdx > 0 ? activeLightboxIdx - 1 : total - 1;
+      openLightbox(prev);
+    });
+  }
+
+  if (lightboxNextBtn) {
+    lightboxNextBtn.addEventListener('click', () => {
+      const next = activeLightboxIdx < total - 1 ? activeLightboxIdx + 1 : 0;
+      openLightbox(next);
+    });
+  }
+
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      const rect = lightbox.getBoundingClientRect();
+      const isInside = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!isInside) {
+        closeLightbox();
+      }
+    });
+
+    lightbox.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prev = activeLightboxIdx > 0 ? activeLightboxIdx - 1 : total - 1;
+        openLightbox(prev);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const next = activeLightboxIdx < total - 1 ? activeLightboxIdx + 1 : 0;
+        openLightbox(next);
+      }
+    });
+  }
+
+  // Initial layout calculation
+  update3DCarousel();
 }
 
