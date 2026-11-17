@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMediaModal();
   initForms();
   initHeaderScroll();
+  initAlbumCards();
 });
 
 /**
@@ -237,3 +238,17 @@ function initHeaderScroll() {
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 }
+
+/**
+ * 6. Album Card Click & Focus Handling
+ * Releases focus on click so moving the mouse away cleanly fades out the overlay
+ */
+function initAlbumCards() {
+  const cards = document.querySelectorAll('.album-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      card.blur();
+    });
+  });
+}
+

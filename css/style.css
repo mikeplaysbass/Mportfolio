@@ -277,6 +277,8 @@ ul, ol {
 #music .section-tag,
 #music .section-title,
 #music .album-title,
+#music .album-overlay-title,
+#music .album-overlay-label,
 #music .album-vinyl-overlay,
 #music .stream-link {
   font-family: var(--font-section-music-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
@@ -284,7 +286,8 @@ ul, ol {
 
 #music .section-subtitle,
 #music .album-meta,
-#music .album-description {
+#music .album-description,
+#music .album-overlay-val {
   font-family: var(--font-section-music-body, 'Just Another Hand', cursive, sans-serif) !important;
 }
 
@@ -1150,62 +1153,145 @@ ul, ol {
 }
 
 .album-card {
+  position: relative;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  display: block;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms ease, box-shadow 300ms ease;
+  touch-action: manipulation;
 }
 
-.album-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-medium);
-  box-shadow: var(--shadow-md);
+.album-card:hover,
+.album-card:focus-visible {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--accent-gold);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.15);
 }
 
 .album-art-wrap {
   position: relative;
   aspect-ratio: 1 / 1;
   width: 100%;
+  height: 100%;
   overflow: hidden;
-  background-color: #121214;
+  background-color: #0d0d0f;
 }
 
 .album-art-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.album-card:hover .album-art-img {
-  transform: scale(1.04);
+.album-card:hover .album-art-img,
+.album-card:focus-visible .album-art-img {
+  transform: scale(1.05);
+}
+
+/* Barely transparent black overlay: smooth fade in on hover, smooth fade out on unhover */
+.album-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 7, 7, 0.90);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.album-card:hover .album-hover-overlay,
+.album-card:focus-visible .album-hover-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.album-overlay-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  gap: 0.85rem;
+  transform: translateY(8px);
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.album-card:hover .album-overlay-inner,
+.album-card:focus-visible .album-overlay-inner {
+  transform: translateY(0);
+}
+
+.album-overlay-title {
+  font-family: var(--font-section-music-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+  font-size: clamp(1.6rem, 1.4rem + 0.8vw, 2.3rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  margin-bottom: 0.2rem;
+}
+
+.album-overlay-divider {
+  width: 36px;
+  height: 2px;
+  background: var(--accent-gold);
+  border-radius: 9999px;
+  opacity: 0.85;
+  margin-bottom: 0.25rem;
+}
+
+.album-overlay-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 100%;
+}
+
+.album-overlay-label {
+  font-family: var(--font-section-music-display, 'Dear Joe', 'dearJoe', cursive, sans-serif);
+  font-size: clamp(0.95rem, 0.85rem + 0.25vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  line-height: 1.2;
+}
+
+.album-overlay-val {
+  font-family: var(--font-section-music-body, 'Just Another Hand', cursive, sans-serif);
+  font-size: clamp(1.5rem, 1.35rem + 0.5vw, 2rem);
+  color: var(--text-primary);
+  line-height: 1.25;
+  letter-spacing: 0.025em;
+  max-width: 95%;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .album-vinyl-overlay {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent-gold);
-  border: 1px solid var(--border-subtle);
+  display: none !important;
 }
 
 .album-info {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 0.5rem;
+  display: none !important;
 }
 
 .album-meta {
