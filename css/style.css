@@ -3,6 +3,36 @@
    Adhering to AGENTS.md: Web Design, Accessibility & Mobile Optimization
    ========================================================================== */
 
+/* Font Face: Dear Joe with system and asset fallbacks */
+@font-face {
+  font-family: 'Dear Joe';
+  src: local('Dear Joe'),
+       local('dearJoe'),
+       local('DearJoe 4'),
+       local('dearJoe 4'),
+       local('dearJoe 5 CASUAL'),
+       local('DearJoe 1'),
+       url('../assets/dearjoe.woff2') format('woff2'),
+       url('../assets/dearjoe.woff') format('woff'),
+       url('../assets/dearjoe.ttf') format('truetype'),
+       url('../assets/dearjoe.otf') format('opentype');
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'dearJoe';
+  src: local('dearJoe'),
+       local('Dear Joe'),
+       local('DearJoe 4'),
+       local('dearJoe 4'),
+       url('../assets/dearjoe.woff2') format('woff2'),
+       url('../assets/dearjoe.woff') format('woff'),
+       url('../assets/dearjoe.ttf') format('truetype');
+  font-display: swap;
+}
+
 :root {
   /* Color Palette (Noir & Warm Brass / Gold) */
   --bg-primary: #070707;
@@ -31,9 +61,30 @@
   --badge-sold-bg: rgba(239, 68, 68, 0.12);
   --badge-sold-text: #f87171;
 
-  /* Fluid Typography (clamp based) */
-  --font-display: 'Syne', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* ==========================================================================
+     Typography & Section Font Customization Controls
+     Default font: "Dear Joe"
+     To customize any section's font individually, edit its variable below:
+     ========================================================================== */
+  --font-dear-joe: 'Dear Joe', 'dearJoe', 'dearJoe 4', 'dearJoe 5 CASUAL', 'DearJoe 1', cursive, sans-serif;
+
+  /* Global Default Font */
+  --font-global: var(--font-dear-joe);
+  --font-display: var(--font-global);
+  --font-body: var(--font-global);
+
+  /* Section-Specific Font Overrides:
+     Replace 'var(--font-global)' with any font name (e.g. 'Syne', sans-serif)
+     to change that section's font independently: */
+  --font-section-nav: var(--font-global);       /* Navigation Bar & Mobile Drawer */
+  --font-section-hero: var(--font-global);      /* Hero Header & Quick Links */
+  --font-section-tour: var(--font-global);      /* Catch Me Live / Tour Dates */
+  --font-section-music: var(--font-global);     /* Discography & Releases */
+  --font-section-videos: var(--font-global);    /* Videos & Live Performances */
+  --font-section-about: var(--font-global);     /* Bio, Highlights & Accolades */
+  --font-section-contact: var(--font-global);   /* Contact & Booking Agency */
+  --font-section-footer: var(--font-global);    /* Footer Landmark */
+  --font-section-modal: var(--font-global);     /* Media Dialog Modal */
 
   --fs-hero: clamp(2.5rem, 6.5vw + 1rem, 6rem);
   --fs-h1: clamp(2rem, 4vw + 0.5rem, 3.75rem);
@@ -117,6 +168,67 @@ ul, ol {
   outline: 2px solid var(--accent-gold);
   outline-offset: 4px;
   border-radius: 4px;
+}
+
+/* ==========================================================================
+   Section Font Scope Bindings
+   Each section binds its internal --font-display, --font-body, and font-family
+   to its dedicated --font-section-* variable.
+   ========================================================================== */
+
+.site-header,
+.mobile-nav-dialog {
+  --font-display: var(--font-section-nav);
+  --font-body: var(--font-section-nav);
+  font-family: var(--font-section-nav);
+}
+
+#hero {
+  --font-display: var(--font-section-hero);
+  --font-body: var(--font-section-hero);
+  font-family: var(--font-section-hero);
+}
+
+#tour {
+  --font-display: var(--font-section-tour);
+  --font-body: var(--font-section-tour);
+  font-family: var(--font-section-tour);
+}
+
+#music {
+  --font-display: var(--font-section-music);
+  --font-body: var(--font-section-music);
+  font-family: var(--font-section-music);
+}
+
+#videos {
+  --font-display: var(--font-section-videos);
+  --font-body: var(--font-section-videos);
+  font-family: var(--font-section-videos);
+}
+
+#about {
+  --font-display: var(--font-section-about);
+  --font-body: var(--font-section-about);
+  font-family: var(--font-section-about);
+}
+
+#contact {
+  --font-display: var(--font-section-contact);
+  --font-body: var(--font-section-contact);
+  font-family: var(--font-section-contact);
+}
+
+.site-footer {
+  --font-display: var(--font-section-footer);
+  --font-body: var(--font-section-footer);
+  font-family: var(--font-section-footer);
+}
+
+.media-modal {
+  --font-display: var(--font-section-modal);
+  --font-body: var(--font-section-modal);
+  font-family: var(--font-section-modal);
 }
 
 /* Skip link for keyboard accessibility */
@@ -1141,6 +1253,39 @@ ul, ol {
 
 .bio-text strong {
   color: var(--text-primary);
+}
+
+/* Performance & Notable Highlights */
+.bio-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.bio-highlight-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bio-highlight-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.bio-highlight-title strong {
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.bio-highlight-text {
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+  line-height: 1.7;
 }
 
 /* Accolades List */
