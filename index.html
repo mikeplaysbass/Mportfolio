@@ -6,12 +6,15 @@
   <meta name="description" content="Official portfolio and tour hub for modern jazz pianist, 5-time Grammy-winning artist and composer. Tour dates, discography, live videos, and booking.">
   <meta name="theme-color" content="#070707">
   
-  <title>Robert Glasper | Official Tour Dates, Music & Portfolio</title>
+  <title>Michael Decena | Official Website &amp; Portfolio</title>
   
   <!-- Font Optimization with Preconnect and font-display: swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Preload hero banner poster for instant LCP -->
+  <link rel="preload" href="assets/hero.svg" as="image" fetchpriority="high">
   
   <!-- Main Stylesheet adhering to AGENTS.md directives -->
   <link rel="stylesheet" href="css/style.css">
@@ -19,51 +22,44 @@
 <body>
 
   <!-- Accessible Skip Link (WCAG 2.1 AA) -->
-  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+  <a href="#hero" class="skip-to-content">Skip to content</a>
 
   <!-- ==========================================================================
-       Site Header & Sticky Navigation
+       Transparent Navigation Bar
        ========================================================================== -->
   <header class="site-header">
     <div class="container nav-container">
       
-      <!-- Brand Logotype -->
-      <a href="#hero" class="brand-logo" aria-label="Robert Glasper Homepage">
-        ROBERT GLASPER
+      <!-- Brand Logotype (Clickable link back to homepage) -->
+      <a href="#hero" class="brand-logo" aria-label="Michael Decena Homepage">
+        MICHAEL DECENA
         <span class="brand-dot" aria-hidden="true"></span>
       </a>
 
-      <!-- Desktop Navigation Links -->
-      <nav class="nav-links" aria-label="Main Navigation">
-        <a href="#tour" class="nav-link">Tour Dates</a>
-        <a href="#music" class="nav-link">Discography</a>
-        <a href="#videos" class="nav-link">Live & Videos</a>
-        <a href="#about" class="nav-link">About & Bio</a>
-        <a href="#contact" class="nav-link">Booking / Contact</a>
-      </nav>
-
-      <!-- Header CTAs & Hamburger Toggle -->
-      <div class="nav-actions">
-        <a href="#tour" class="btn btn-gold header-tour-btn">Get Tickets</a>
-        
-        <!-- Mobile Menu Button (48x48px accessible touch target) -->
-        <button id="open-menu-btn" class="menu-toggle-btn" aria-label="Open navigation menu" aria-controls="mobile-nav-dialog" aria-expanded="false">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      </div>
+      <!-- Hamburger Menu Button on the Right (48x48px accessible tap target) -->
+      <button 
+        id="open-menu-btn" 
+        class="menu-toggle-btn" 
+        type="button" 
+        aria-label="Open navigation menu" 
+        aria-controls="mobile-nav-dialog" 
+        aria-expanded="false"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
 
     </div>
   </header>
 
-  <!-- Accessible Native <dialog> Mobile Drawer -->
+  <!-- Accessible Navigation Drawer Dialog -->
   <dialog id="mobile-nav-dialog" class="mobile-nav-dialog" aria-labelledby="mobile-nav-title">
     <div class="mobile-nav-header">
       <span id="mobile-nav-title" class="brand-logo">
-        ROBERT GLASPER<span class="brand-dot" aria-hidden="true"></span>
+        MICHAEL DECENA<span class="brand-dot" aria-hidden="true"></span>
       </span>
       <button id="close-menu-btn" class="icon-btn" aria-label="Close navigation menu">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -73,16 +69,16 @@
       </button>
     </div>
     
-    <nav class="mobile-nav-body" aria-label="Mobile Navigation">
-      <a href="#tour" class="mobile-nav-link">01. Tour Dates</a>
+    <nav class="mobile-nav-body" aria-label="Main Navigation">
+      <a href="#tour" class="mobile-nav-link">01. Catch Me Live</a>
       <a href="#music" class="mobile-nav-link">02. Discography</a>
-      <a href="#videos" class="mobile-nav-link">03. Live & Videos</a>
+      <a href="#videos" class="mobile-nav-link">03. Live &amp; Videos</a>
       <a href="#about" class="mobile-nav-link">04. Biography</a>
-      <a href="#contact" class="mobile-nav-link">05. Contact & Booking</a>
+      <a href="#contact" class="mobile-nav-link">05. Contact &amp; Booking</a>
     </nav>
     
     <div class="mobile-nav-footer">
-      <a href="#tour" class="btn btn-gold" style="width: 100%;">View All Tour Dates</a>
+      <a href="#tour" class="btn btn-gold" style="width: 100%;">Catch Me Live</a>
     </div>
   </dialog>
 
@@ -93,151 +89,342 @@
 
     <!-- Hero Section -->
     <section id="hero" class="hero" aria-labelledby="hero-title">
-      <!-- Full-bleed background with LCP Priority Optimization -->
+      <!-- Full-bleed looping video background with poster fallback -->
       <div class="hero-backdrop" aria-hidden="true">
-        <img 
-          src="assets/hero.svg" 
-          alt="" 
-          class="hero-img" 
+        <video 
+          id="hero-video"
+          class="hero-video" 
+          autoplay 
+          muted 
+          loop 
+          playsinline 
+          preload="auto"
+          poster="assets/hero.svg"
           width="1920" 
-          height="1080" 
-          fetchpriority="high"
+          height="1080"
         >
+          <source src="assets/mac_recap.mp4" type="video/mp4">
+          <source src="assets/Mac_recap.mp4" type="video/mp4">
+          <img 
+            src="assets/hero.svg" 
+            alt="" 
+            class="hero-img" 
+            width="1920" 
+            height="1080"
+          >
+        </video>
         <div class="hero-overlay"></div>
       </div>
 
       <div class="container hero-content">
-        <!-- Accolade Pill Badge -->
-        <div class="hero-accolade-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-          </svg>
-          5× GRAMMY® AWARD WINNER
-        </div>
-
-        <h1 id="hero-title" class="hero-title">
-          BLUE NOTE RESIDENCY
-          <span class="highlight">&amp; WORLD TOUR 2026</span>
-        </h1>
-
-        <p class="hero-lead">
-          Pioneering a sound where contemporary acoustic jazz, neo-soul warmth, and visionary hip-hop syncopation converge. Experience the live residency and global tour.
-        </p>
-
-        <div class="hero-ctas">
-          <a href="#tour" class="btn btn-gold">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
+        <h1 class="visually-hidden">Elmiene | Official Portfolio, Music &amp; Tour Dates</h1>
+        
+        <nav class="hero-nav-links" aria-label="Hero quick section links">
+          <a href="#tour" class="hero-link-pill">
+            <span>Catch Me Live</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
             </svg>
-            Explore Tour Dates
           </a>
-          <a href="#music" class="btn btn-outline">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polygon points="10 8 16 12 10 16 10 8"></polygon>
+          <a href="#music" class="hero-link-pill">
+            <span>Discography</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
             </svg>
-            Stream Latest Music
           </a>
-        </div>
+          <a href="#videos" class="hero-link-pill">
+            <span>Live &amp; Videos</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="#about" class="hero-link-pill">
+            <span>About &amp; Bio</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="#contact" class="hero-link-pill">
+            <span>Booking &amp; Inquiries</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+        </nav>
       </div>
+
+      <!-- Accessible Video Control (WCAG 2.1 AA 2.2.2 Pause, Stop, Hide) -->
+      <button 
+        id="hero-video-toggle" 
+        class="hero-video-toggle-btn" 
+        type="button" 
+        aria-label="Pause background video"
+        title="Pause background video"
+      >
+        <svg id="hero-pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="6" y="4" width="4" height="16"></rect>
+          <rect x="14" y="4" width="4" height="16"></rect>
+        </svg>
+        <svg id="hero-play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display: none;">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span id="hero-video-toggle-text">Pause Video</span>
+      </button>
     </section>
 
     <!-- ==========================================================================
-         Tour Section (Directly Modeled on robertglasper.com/#tour Blueprint)
+         Tour Section (Sourced directly from el-mean.com/tour)
          ========================================================================== -->
     <section id="tour" class="section tour-section" aria-labelledby="tour-heading">
       <div class="container">
         
         <header class="section-header flex-split">
           <div>
-            <span class="section-tag">Live Calendar</span>
-            <h2 id="tour-heading" class="section-title">Tour Dates &amp; Residencies</h2>
+            <span class="section-tag">Sounds for Someone Tour</span>
+            <h2 id="tour-heading" class="section-title">Catch Me Live</h2>
           </div>
           <p class="section-subtitle">
-            Secure tickets, VIP soundcheck packages, and annual New York residency passes.
+            Official headline tour dates across the UK and Europe.
           </p>
         </header>
 
         <!-- Category Filter Pills (ARIA Tablist pattern) -->
         <div class="tour-filter-bar" role="tablist" aria-label="Tour category filter">
-          <button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates (6)</button>
-          <button class="filter-pill" role="tab" aria-selected="false" data-filter="residency">Blue Note Residency</button>
-          <button class="filter-pill" role="tab" aria-selected="false" data-filter="world-tour">World Tour</button>
-          <button class="filter-pill" role="tab" aria-selected="false" data-filter="festival">Festivals</button>
+          <button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>
+          <button class="filter-pill" role="tab" aria-selected="false" data-filter="europe">UK &amp; Europe</button>
         </div>
 
         <!-- Tour Date Schedule List -->
         <div class="tour-list" role="region" aria-label="Upcoming Tour Dates">
           
-          <!-- Show 1: NYC Blue Note Residency -->
-          <article class="tour-card" data-category="residency">
+          <!-- Show 1: Amsterdam Paradiso -->
+          <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
-              <span class="tour-month">OCT</span>
-              <span class="tour-day">02</span>
-              <span class="tour-weekday">THU</span>
+              <span class="tour-month">NOV</span>
+              <span class="tour-day">28</span>
+              <span class="tour-weekday">SAT</span>
             </div>
             
             <div class="tour-location-col">
-              <span class="tour-city">New York, NY</span>
-              <span class="tour-country">United States</span>
+              <span class="tour-city">Amsterdam</span>
+              <span class="tour-country">Netherlands</span>
             </div>
 
             <div class="tour-venue-col">
-              <span class="tour-venue">Blue Note Jazz Club</span>
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Paradiso (Main Hall)</span>
               <span class="tour-details-tag">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <circle cx="12" cy="12" r="10"></circle>
                 </svg>
-                Robtober Residency 2026 • 8:00 PM &amp; 10:30 PM
+                Sounds for Someone Tour • Extra Date Added
               </span>
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-gold" aria-label="Get tickets for Oct 02 at Blue Note Jazz Club New York">
+              <a href="#contact" class="btn btn-gold" aria-label="Get tickets for Nov 28 at Paradiso Amsterdam">
                 Tickets &amp; VIP
               </a>
             </div>
           </article>
 
-          <!-- Show 2: Washington DC -->
-          <article class="tour-card" data-category="world-tour">
+          <!-- Show 2: Amsterdam Melkweg -->
+          <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
-              <span class="tour-month">OCT</span>
-              <span class="tour-day">08</span>
-              <span class="tour-weekday">WED</span>
+              <span class="tour-month">NOV</span>
+              <span class="tour-day">29</span>
+              <span class="tour-weekday">SUN</span>
             </div>
             
             <div class="tour-location-col">
-              <span class="tour-city">Washington, DC</span>
-              <span class="tour-country">United States</span>
+              <span class="tour-city">Amsterdam</span>
+              <span class="tour-country">Netherlands</span>
             </div>
 
             <div class="tour-venue-col">
-              <span class="tour-venue">The Kennedy Center Concert Hall</span>
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Melkweg (The Max)</span>
               <span class="tour-details-tag">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <circle cx="12" cy="12" r="10"></circle>
                 </svg>
-                With National Symphony Orchestra
+                Sounds for Someone Tour
               </span>
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Oct 08 at The Kennedy Center Washington DC">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Nov 29 at Melkweg Amsterdam">
                 Tickets
               </a>
             </div>
           </article>
 
-          <!-- Show 3: London Ronnie Scott's -->
-          <article class="tour-card" data-category="world-tour">
+          <!-- Show 3: Berlin Metropol -->
+          <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
-              <span class="tour-month">OCT</span>
-              <span class="tour-day">16</span>
-              <span class="tour-weekday">FRI</span>
+              <span class="tour-month">NOV</span>
+              <span class="tour-day">30</span>
+              <span class="tour-weekday">MON</span>
+            </div>
+            
+            <div class="tour-location-col">
+              <span class="tour-city">Berlin</span>
+              <span class="tour-country">Germany</span>
+            </div>
+
+            <div class="tour-venue-col">
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Metropol</span>
+              <span class="tour-details-tag">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+                Sounds for Someone Tour
+              </span>
+            </div>
+
+            <div class="tour-action-col">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Nov 30 at Metropol Berlin">
+                Tickets
+              </a>
+            </div>
+          </article>
+
+          <!-- Show 4: Paris Salle Pleyel -->
+          <article class="tour-card" data-category="europe">
+            <div class="tour-date-col">
+              <span class="tour-month">DEC</span>
+              <span class="tour-day">02</span>
+              <span class="tour-weekday">WED</span>
+            </div>
+            
+            <div class="tour-location-col">
+              <span class="tour-city">Paris</span>
+              <span class="tour-country">France</span>
+            </div>
+
+            <div class="tour-venue-col">
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Salle Pleyel</span>
+              <span class="tour-details-tag">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+                Sounds for Someone Tour • Low Tickets
+              </span>
+            </div>
+
+            <div class="tour-action-col">
+              <a href="#contact" class="btn btn-gold" aria-label="Get tickets for Dec 02 at Salle Pleyel Paris">
+                Tickets &amp; VIP
+              </a>
+            </div>
+          </article>
+
+          <!-- Show 5: Brussels Ancienne Belgique -->
+          <article class="tour-card" data-category="europe">
+            <div class="tour-date-col">
+              <span class="tour-month">DEC</span>
+              <span class="tour-day">03</span>
+              <span class="tour-weekday">THU</span>
+            </div>
+            
+            <div class="tour-location-col">
+              <span class="tour-city">Brussels</span>
+              <span class="tour-country">Belgium</span>
+            </div>
+
+            <div class="tour-venue-col">
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Ancienne Belgique (AB)</span>
+              <span class="tour-details-tag">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+                Main Hall Headline Set
+              </span>
+            </div>
+
+            <div class="tour-action-col">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 03 at Ancienne Belgique Brussels">
+                Tickets
+              </a>
+            </div>
+          </article>
+
+          <!-- Show 6: Bristol O2 Academy -->
+          <article class="tour-card" data-category="europe">
+            <div class="tour-date-col">
+              <span class="tour-month">DEC</span>
+              <span class="tour-day">05</span>
+              <span class="tour-weekday">SAT</span>
+            </div>
+            
+            <div class="tour-location-col">
+              <span class="tour-city">Bristol</span>
+              <span class="tour-country">United Kingdom</span>
+            </div>
+
+            <div class="tour-venue-col">
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">O2 Academy Bristol</span>
+              <span class="tour-details-tag">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+                Sounds for Someone UK Tour
+              </span>
+            </div>
+
+            <div class="tour-action-col">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 05 at O2 Academy Bristol">
+                Tickets
+              </a>
+            </div>
+          </article>
+
+          <!-- Show 7: Manchester Albert Hall -->
+          <article class="tour-card" data-category="europe">
+            <div class="tour-date-col">
+              <span class="tour-month">DEC</span>
+              <span class="tour-day">06</span>
+              <span class="tour-weekday">SUN</span>
+            </div>
+            
+            <div class="tour-location-col">
+              <span class="tour-city">Manchester</span>
+              <span class="tour-country">United Kingdom</span>
+            </div>
+
+            <div class="tour-venue-col">
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Albert Hall</span>
+              <span class="tour-details-tag">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+                Sounds for Someone UK Tour
+              </span>
+            </div>
+
+            <div class="tour-action-col">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 06 at Albert Hall Manchester">
+                Tickets
+              </a>
+            </div>
+          </article>
+
+          <!-- Show 8: London Eventim Apollo -->
+          <article class="tour-card" data-category="europe">
+            <div class="tour-date-col">
+              <span class="tour-month">DEC</span>
+              <span class="tour-day">08</span>
+              <span class="tour-weekday">TUE</span>
             </div>
             
             <div class="tour-location-col">
@@ -246,109 +433,20 @@
             </div>
 
             <div class="tour-venue-col">
-              <span class="tour-venue">Ronnie Scott's Jazz Club</span>
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Eventim Apollo (Hammersmith)</span>
               <span class="tour-details-tag">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <circle cx="12" cy="12" r="10"></circle>
                 </svg>
-                Trio Acoustic Special Set
+                European Tour Grand Finale
               </span>
             </div>
 
             <div class="tour-action-col">
-              <button class="btn btn-sold-out" disabled aria-label="Tickets sold out for Oct 16 in London">
+              <button class="btn btn-sold-out" disabled aria-label="Tickets sold out for Dec 08 at Eventim Apollo London">
                 Sold Out
               </button>
-            </div>
-          </article>
-
-          <!-- Show 4: North Sea Jazz Festival -->
-          <article class="tour-card" data-category="festival">
-            <div class="tour-date-col">
-              <span class="tour-month">OCT</span>
-              <span class="tour-day">24</span>
-              <span class="tour-weekday">SAT</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Rotterdam</span>
-              <span class="tour-country">Netherlands</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-venue">Ahoy Arena — North Sea Jazz</span>
-              <span class="tour-details-tag">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"></circle>
-                </svg>
-                Main Stage Headliner
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Festival Passes for Oct 24 at North Sea Jazz">
-                Festival Passes
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 5: Hollywood Bowl -->
-          <article class="tour-card" data-category="world-tour">
-            <div class="tour-date-col">
-              <span class="tour-month">NOV</span>
-              <span class="tour-day">05</span>
-              <span class="tour-weekday">THU</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Los Angeles, CA</span>
-              <span class="tour-country">United States</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-venue">The Hollywood Bowl</span>
-              <span class="tour-details-tag">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"></circle>
-                </svg>
-                Special Black Radio Symphony Night
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-gold" aria-label="Tickets and VIP for Nov 05 at Hollywood Bowl">
-                Tickets &amp; VIP
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 6: Tokyo Blue Note -->
-          <article class="tour-card" data-category="residency">
-            <div class="tour-date-col">
-              <span class="tour-month">NOV</span>
-              <span class="tour-day">14</span>
-              <span class="tour-weekday">SAT</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Tokyo</span>
-              <span class="tour-country">Japan</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-venue">Blue Note Tokyo</span>
-              <span class="tour-details-tag">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"></circle>
-                </svg>
-                Aoyama Evening Residency
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Reserve seats for Nov 14 at Blue Note Tokyo">
-                Reserve Seats
-              </a>
             </div>
           </article>
 
@@ -358,7 +456,7 @@
         <div class="tour-track-box">
           <div class="tour-track-info">
             <h3>Don't see your city on the tour?</h3>
-            <p>Track Robert Glasper to receive instant notifications when concerts and residencies are announced near you.</p>
+            <p>Track tour dates to receive instant notifications when concerts and headline dates are announced near you.</p>
           </div>
           
           <form id="track-artist-form" style="display: flex; gap: 0.75rem; flex-wrap: wrap; width: 100%; max-width: 440px;" aria-label="Tour tracking alert form">
@@ -722,11 +820,11 @@
           <!-- Editorial Portrait & Quote Overlay -->
           <div class="bio-portrait-wrap">
             <img 
-              src="assets/bio.svg" 
-              alt="Portrait of Robert Glasper in the studio" 
+              src="assets/Mike.png" 
+              alt="Portrait in the studio" 
               class="bio-portrait-img" 
-              width="800" 
-              height="1000" 
+              width="1200" 
+              height="1500" 
               loading="lazy" 
               decoding="async"
             >
@@ -938,7 +1036,7 @@
       
       <div class="footer-top">
         <div class="footer-brand">
-          ROBERT GLASPER<span class="brand-dot" aria-hidden="true"></span>
+          MICHAEL DECENA<span class="brand-dot" aria-hidden="true"></span>
         </div>
 
         <nav class="footer-social-links" aria-label="Social media links">
@@ -968,7 +1066,7 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2026 Robert Glasper. All rights reserved. Designed to WCAG 2.1 AA accessibility standards.</p>
+        <p>&copy; 2026 Michael Decena. All rights reserved. Designed to WCAG 2.1 AA accessibility standards.</p>
         <div class="footer-links">
           <a href="#hero" class="footer-link">Back to Top ↑</a>
           <a href="#contact" class="footer-link">Press Inquiries</a>

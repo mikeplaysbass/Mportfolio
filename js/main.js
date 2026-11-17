@@ -8,12 +8,54 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initHeroVideo();
   initMobileNav();
   initTourFilters();
   initMediaModal();
   initForms();
   initHeaderScroll();
 });
+
+/**
+ * 0. Hero Background Looping Video & Reduced Motion Control
+ */
+function initHeroVideo() {
+  const video = document.getElementById('hero-video');
+  const toggleBtn = document.getElementById('hero-video-toggle');
+  const pauseIcon = document.getElementById('hero-pause-icon');
+  const playIcon = document.getElementById('hero-play-icon');
+  const toggleText = document.getElementById('hero-video-toggle-text');
+
+  if (!video || !toggleBtn) return;
+
+  // Respect system-level reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    video.pause();
+    if (pauseIcon && playIcon && toggleText) {
+      pauseIcon.style.display = 'none';
+      playIcon.style.display = 'block';
+      toggleText.textContent = 'Play Video';
+      toggleBtn.setAttribute('aria-label', 'Play background video');
+    }
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    if (video.paused) {
+      video.play();
+      if (pauseIcon) pauseIcon.style.display = 'block';
+      if (playIcon) playIcon.style.display = 'none';
+      if (toggleText) toggleText.textContent = 'Pause Video';
+      toggleBtn.setAttribute('aria-label', 'Pause background video');
+    } else {
+      video.pause();
+      if (pauseIcon) pauseIcon.style.display = 'none';
+      if (playIcon) playIcon.style.display = 'block';
+      if (toggleText) toggleText.textContent = 'Play Video';
+      toggleBtn.setAttribute('aria-label', 'Play background video');
+    }
+  });
+}
 
 /**
  * 1. Mobile Navigation Drawer & Focus Management
@@ -187,19 +229,20 @@ function initForms() {
 }
 
 /**
- * 5. Passive Header Scroll Shadow Effect
+ * 5. Passive Header Scroll Follow & Blur Effect
  */
 function initHeaderScroll() {
   const header = document.querySelector('.site-header');
   if (!header) return;
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      header.style.backgroundColor = 'rgba(7, 7, 7, 0.95)';
-      header.style.borderBottomColor = 'rgba(255, 255, 255, 0.14)';
+  function handleScroll() {
+    if (window.scrollY > 30) {
+      header.classList.add('scrolled');
     } else {
-      header.style.backgroundColor = 'var(--bg-glass)';
-      header.style.borderBottomColor = 'var(--border-subtle)';
+      header.classList.remove('scrolled');
     }
-  }, { passive: true });
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
 }

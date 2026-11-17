@@ -14,11 +14,13 @@ Inspired by and modeled directly on the design language of [robertglasper.com/#t
    - Native HTML5 `<dialog>` mobile drawer with 48×48px tap targets, keyboard trap, and escape key handling.
 
 2. **Full-Bleed Cinematic Hero (`#hero`)**:
-   - Dark noir ambiance with warm gold and stage light gradients.
+   - Continuous looping video banner (`assets/mac_recap.mp4`) with dark cinematic vignette overlay.
+   - Accessible Play/Pause toggle button complying with WCAG 2.1 AA (Guideline 2.2.2 Pause, Stop, Hide).
+   - Automatic pause when `prefers-reduced-motion: reduce` is detected.
    - Accolade pill badges (e.g. *5× GRAMMY® Award Winner*).
    - High-impact display typography with fluid `clamp()` scaling.
    - Dual CTAs: *Explore Tour Dates* and *Stream Latest Music*.
-   - LCP prioritized media with `fetchpriority="high"` and zero layout shift.
+   - Preloaded poster fallback (`assets/hero.svg`) ensuring instant LCP with zero layout shift.
 
 3. **Live Tour & Residency Hub (`#tour`)**:
    - Filter bar: *All Dates*, *Blue Note Residency*, *World Tour*, *Festivals*.

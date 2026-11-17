@@ -1,5 +1,6 @@
 import re
 import os
+import urllib.parse
 
 def test_compliance():
     with open('index.html', 'r', encoding='utf-8') as f:
@@ -54,12 +55,13 @@ def test_compliance():
     for src in srcs:
         if src.startswith('http'):
             continue
-        if not os.path.exists(src):
-            errors.append(f"Referenced asset not found on disk: {src}")
+        cleaned_path = urllib.parse.unquote(src)
+        if not os.path.exists(cleaned_path):
+            errors.append(f"Referenced asset not found on disk: {cleaned_path}")
 
-    # 7. Mobile Nav Dialog
-    if '<dialog id="mobile-nav-dialog"' not in html:
-        errors.append("Missing mobile navigation <dialog>")
+    # 7. Navigation Links
+    if 'hero-nav-links' not in html:
+        errors.append("Missing hero navigation links")
 
     # 8. Tour Section Blueprint
     if 'id="tour"' not in html:
