@@ -2,7 +2,7 @@
    Design Tokens & Modern CSS Reset
    Adhering to AGENTS.md: Web Design, Accessibility & Mobile Optimization
    ========================================================================== */
-
+  @import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap');
 /* Font Face: Dear Joe with system and asset fallbacks */
 /*
 @font-face {
@@ -45,6 +45,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Just Another Hand';
+  src: url('../assets/JustAnotherHand-Regular.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 :root {
   /* Color Palette (Noir & Warm Brass / Gold) */
@@ -80,7 +87,7 @@
      To customize any section's font individually, edit its variable below:
      ========================================================================== */
   --font-dear-joe: 'Dear Joe', 'dearJoe', 'dearJoe 4', 'dearJoe 5 CASUAL', 'DearJoe 1', cursive, sans-serif;
-
+  --font-just-another-hand: 'Just Another Hand', cursive, sans-serif;
   /* Global Default Font */
   --font-global: var(--font-dear-joe);
   --font-display: var(--font-global);
