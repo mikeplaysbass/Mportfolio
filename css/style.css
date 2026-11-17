@@ -4,6 +4,7 @@
    ========================================================================== */
 
 /* Font Face: Dear Joe with system and asset fallbacks */
+/*
 @font-face {
   font-family: 'Dear Joe';
   src: local('Dear Joe'),
@@ -20,7 +21,10 @@
   font-weight: normal;
   font-style: normal;
 }
+*/
 
+
+/*
 @font-face {
   font-family: 'dearJoe';
   src: local('dearJoe'),
@@ -32,6 +36,15 @@
        url('../assets/dearjoe.ttf') format('truetype');
   font-display: swap;
 }
+*/
+
+@font-face {
+  font-family: 'Dear Joe';
+  src: url('../assets/DearJoe1MS 400.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 :root {
   /* Color Palette (Noir & Warm Brass / Gold) */
