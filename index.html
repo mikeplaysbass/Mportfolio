@@ -11,7 +11,7 @@
   <!-- Font Optimization with Preconnect and font-display: swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&family=Permanent+Marker&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   
   <!-- Preload hero banner poster for instant LCP -->
   <link rel="preload" href="assets/hero.svg" as="image" fetchpriority="high">
@@ -33,7 +33,6 @@
       <!-- Brand Logotype (Clickable link back to homepage) -->
       <a href="#hero" class="brand-logo" aria-label="Michael Decena Homepage">
         MICHAEL DECENA
-        <span class="brand-dot" aria-hidden="true"></span>
       </a>
 
       <!-- Hamburger Menu Button on the Right (48x48px accessible tap target) -->
@@ -70,10 +69,10 @@
     </div>
     
     <nav class="mobile-nav-body" aria-label="Main Navigation">
-      <a href="#tour" class="mobile-nav-link">01. Catch Me Live</a>
-      <a href="#music" class="mobile-nav-link">02. Discography</a>
+      <a href="#about" class="mobile-nav-link">01. Biography</a>
+      <a href="#tour" class="mobile-nav-link">02. Catch Me Live</a>
       <a href="#videos" class="mobile-nav-link">03. Live &amp; Videos</a>
-      <a href="#about" class="mobile-nav-link">04. Biography</a>
+      <a href="#music" class="mobile-nav-link">04. Discography</a>
       <a href="#contact" class="mobile-nav-link">05. Contact &amp; Booking</a>
     </nav>
     
@@ -116,44 +115,24 @@
         <div class="hero-overlay"></div>
       </div>
 
-      <div class="container hero-content">
+      <div class="hero-content">
         <h1 class="visually-hidden">Elmiene | Official Portfolio, Music &amp; Tour Dates</h1>
         
         <nav class="hero-nav-links" aria-label="Hero quick section links">
+          <a href="#about" class="hero-link-pill">
+            <span>About &amp; Bio</span>
+          </a>
           <a href="#tour" class="hero-link-pill">
             <span>Catch Me Live</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
-          </a>
-          <a href="#music" class="hero-link-pill">
-            <span>Discography</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
           </a>
           <a href="#videos" class="hero-link-pill">
             <span>Live &amp; Videos</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
           </a>
-          <a href="#about" class="hero-link-pill">
-            <span>About &amp; Bio</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
+          <a href="#music" class="hero-link-pill">
+            <span>Discography</span>
           </a>
           <a href="#contact" class="hero-link-pill">
             <span>Booking &amp; Inquiries</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
           </a>
         </nav>
       </div>
@@ -178,6 +157,118 @@
     </section>
 
     <!-- ==========================================================================
+         Editorial Biography & Accolades Section
+         ========================================================================== -->
+    <section id="about" class="section section-alt" aria-labelledby="bio-heading">
+      <div class="container">
+        
+        <div class="bio-editorial">
+          
+          <!-- Editorial Portrait & Quote Overlay -->
+          <div class="bio-portrait-wrap">
+            <img 
+              src="assets/Mike.png" 
+              alt="Portrait in the studio" 
+              class="bio-portrait-img" 
+              width="1200" 
+              height="1500" 
+              loading="lazy" 
+              decoding="async"
+            >
+            <div class="bio-quote-overlay">
+              <p class="bio-quote-text" style="font-family: 'Permanent Marker', cursive, sans-serif;">
+                &ldquo;Mike&rdquo;
+              </p>
+            </div>
+          </div>
+
+          <!-- Narrative Content & Accolades -->
+          <div class="bio-content">
+            <span class="section-tag" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Biography</span>
+            <h2 id="bio-heading" class="section-title" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Made in New York</h2>
+            
+            <p class="bio-text" style="font-family: 'Just Another Hand', cursive, sans-serif;">
+              Bassist, Artist, and Music Director, <strong style="font-family: inherit;">Michael Decena</strong> is professional bass player is based and native in New York City. He is known for a deep pocket, musicality, and adaptability across genres. He has experience in touring, studio sessions, and music direction with various artists like Elmiene, Ricky Martin, Mac Ayres, and Maro.
+            </p>
+
+            <!-- Performance & Notable Highlights -->
+            <div class="bio-highlights">
+              <div class="bio-highlight-group">
+                <h3 class="bio-highlight-title" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;"><strong>Performance Highlights</strong></h3>
+                <p class="bio-highlight-text" style="font-family: 'Just Another Hand', cursive, sans-serif;">
+                  Elmiene • Mac Ayres • Maro • Naika • Madison McFerrin • Brian McKnight • Amber Mark • Jennifer Lopez • Dani Murcia • Fuji Kaze • Big Stuff • Sophie Marks • Floyd Fuji • Arin Ray
+                </p>
+              </div>
+
+              <div class="bio-highlight-group">
+                <h3 class="bio-highlight-title" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;"><strong>Notable Highlights</strong></h3>
+                <p class="bio-highlight-text" style="font-family: 'Just Another Hand', cursive, sans-serif;">
+                  SUMER SONIC FEST • Broccoli City Festival • Jimmy Kimmel • Blue Note • Taratata • Various Notable Arenas • V.M.A.S • GroundUp Fest • Meo Sudoeste • AfroPunk
+                </p>
+              </div>
+            </div>
+
+            <!-- Accolades Grid -->
+            <div class="accolades-grid" aria-label="Awards and Accolades">
+              
+              <div class="accolade-item">
+                <div class="accolade-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div>
+                  <strong style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">5× GRAMMY® Awards</strong>
+                  <span style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.35vw, 1.45rem);">Best R&amp;B Album, Best R&amp;B Song, Best Jazz Album</span>
+                </div>
+              </div>
+
+              <div class="accolade-item">
+                <div class="accolade-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div>
+                  <strong style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Peabody Award Winner</strong>
+                  <span style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.35vw, 1.45rem);">Documentary Original Soundtrack &amp; Composition</span>
+                </div>
+              </div>
+
+              <div class="accolade-item">
+                <div class="accolade-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div>
+                  <strong style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Primetime Emmy® Winner</strong>
+                  <span style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.35vw, 1.45rem);">Outstanding Original Music and Lyrics</span>
+                </div>
+              </div>
+
+              <div class="accolade-item">
+                <div class="accolade-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div>
+                  <strong style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Blue Note Records Artist</strong>
+                  <span style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.35vw, 1.45rem);">Over 2 Decades on the Legendary Label</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
          Tour Section (Sourced directly from el-mean.com/tour)
          ========================================================================== -->
     <section id="tour" class="section tour-section" aria-labelledby="tour-heading">
@@ -185,11 +276,11 @@
         
         <header class="section-header flex-split">
           <div>
-            <span class="section-tag">Upcoming Performances</span>
-            <h2 id="tour-heading" class="section-title">Catch Me Live</h2>
+            <span class="section-tag" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Upcoming Performances</span>
+            <h2 id="tour-heading" class="section-title" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Catch Me Live</h2>
           </div>
-          <p class="section-subtitle">
-            
+          <p class="section-subtitle" style="font-family: 'Just Another Hand', cursive, sans-serif;">
+            Official headline tour dates across the UK and Europe.
           </p>
         </header>
 
@@ -456,17 +547,140 @@
     </section>
 
     <!-- ==========================================================================
-         Discography / Releases Section
+         Live Sessions & Video Archive Section
          ========================================================================== -->
-    <section id="music" class="section section-alt" aria-labelledby="music-heading">
+    <section id="videos" class="section section-alt" aria-labelledby="videos-heading">
       <div class="container">
         
         <header class="section-header flex-split">
           <div>
-            <span class="section-tag">Discography</span>
-            <h2 id="music-heading" class="section-title">Selected Works &amp; Releases</h2>
+            <span class="section-tag" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Performance Archive</span>
+            <h2 id="videos-heading" class="section-title" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Live Sessions &amp; Visuals</h2>
           </div>
-          <p class="section-subtitle">
+          <p class="section-subtitle" style="font-family: 'Just Another Hand', cursive, sans-serif;">
+            Experience intimate studio sessions, festival headliner footage, and concert hall performances.
+          </p>
+        </header>
+
+        <div class="videos-grid">
+          
+          <!-- Video 1 -->
+          <article class="video-card" data-embed="tiny-desk-session" tabindex="0" role="button" aria-label="Play Tiny Desk Concert session">
+            <div class="video-thumbnail-wrap">
+              <img 
+                src="assets/video1.svg" 
+                alt="Tiny Desk concert performance preview" 
+                class="video-thumbnail" 
+                width="1280" 
+                height="720" 
+                loading="lazy" 
+                decoding="async"
+              >
+              <button class="video-play-btn" aria-label="Play NPR Tiny Desk Concert">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </button>
+            </div>
+            <div class="video-info">
+              <span class="video-category">NPR Music</span>
+              <h3 class="video-title">NPR Tiny Desk Concert</h3>
+              <p class="video-meta">Live in Washington, DC • 24 min • 14M+ Views</p>
+            </div>
+          </article>
+
+          <!-- Video 2 -->
+          <article class="video-card" data-embed="symphony-hall" tabindex="0" role="button" aria-label="Play Live at Symphony Hall session">
+            <div class="video-thumbnail-wrap">
+              <img 
+                src="assets/video2.svg" 
+                alt="Live at Symphony Hall concert preview" 
+                class="video-thumbnail" 
+                width="1280" 
+                height="720" 
+                loading="lazy" 
+                decoding="async"
+              >
+              <button class="video-play-btn" aria-label="Play Live at Symphony Hall">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </button>
+            </div>
+            <div class="video-info">
+              <span class="video-category">Orchestral Showcase</span>
+              <h3 class="video-title">Live at Symphony Hall</h3>
+              <p class="video-meta">With BBC Concert Orchestra • Full Performance</p>
+            </div>
+          </article>
+
+          <!-- Video 3 -->
+          <article class="video-card" data-embed="blue-note-jam" tabindex="0" role="button" aria-label="Play Late Night Blue Note Jam session">
+            <div class="video-thumbnail-wrap">
+              <img 
+                src="assets/video3.svg" 
+                alt="Late Night Blue Note Jam concert preview" 
+                class="video-thumbnail" 
+                width="1280" 
+                height="720" 
+                loading="lazy" 
+                decoding="async"
+              >
+              <button class="video-play-btn" aria-label="Play Late Night Blue Note Jam">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </button>
+            </div>
+            <div class="video-info">
+              <span class="video-category">Residency Exclusive</span>
+              <h3 class="video-title">Late Night Blue Note Jam</h3>
+              <p class="video-meta">Unannounced Superjam Live in Greenwich Village</p>
+            </div>
+          </article>
+
+          <!-- Video 4 -->
+          <article class="video-card" data-embed="doc-black-radio" tabindex="0" role="button" aria-label="Play The Making of Black Radio documentary">
+            <div class="video-thumbnail-wrap">
+              <img 
+                src="assets/video4.svg" 
+                alt="The Making of Black Radio documentary preview" 
+                class="video-thumbnail" 
+                width="1280" 
+                height="720" 
+                loading="lazy" 
+                decoding="async"
+              >
+              <button class="video-play-btn" aria-label="Play The Making of Black Radio">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </button>
+            </div>
+            <div class="video-info">
+              <span class="video-category">Studio Documentary</span>
+              <h3 class="video-title">The Making of Black Radio</h3>
+              <p class="video-meta">Behind the Glass at Capitol Studios, Hollywood</p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Discography / Releases Section
+         ========================================================================== -->
+    <section id="music" class="section" aria-labelledby="music-heading">
+      <div class="container">
+        
+        <header class="section-header flex-split">
+          <div>
+            <span class="section-tag" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Discography</span>
+            <h2 id="music-heading" class="section-title" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Selected Works &amp; Releases</h2>
+          </div>
+          <p class="section-subtitle" style="font-family: 'Just Another Hand', cursive, sans-serif;">
             Exploring sonic boundaries across Grammy-awarded studio albums, collaborative suites, and historic Blue Note recordings.
           </p>
         </header>
@@ -665,250 +879,15 @@
     </section>
 
     <!-- ==========================================================================
-         Live Sessions & Video Archive Section
-         ========================================================================== -->
-    <section id="videos" class="section" aria-labelledby="videos-heading">
-      <div class="container">
-        
-        <header class="section-header flex-split">
-          <div>
-            <span class="section-tag">Performance Archive</span>
-            <h2 id="videos-heading" class="section-title">Live Sessions &amp; Visuals</h2>
-          </div>
-          <p class="section-subtitle">
-            Experience intimate studio sessions, festival headliner footage, and concert hall performances.
-          </p>
-        </header>
-
-        <div class="videos-grid">
-          
-          <!-- Video 1 -->
-          <article class="video-card" data-embed="tiny-desk-session" tabindex="0" role="button" aria-label="Play Tiny Desk Concert session">
-            <div class="video-thumbnail-wrap">
-              <img 
-                src="assets/video1.svg" 
-                alt="Tiny Desk concert performance preview" 
-                class="video-thumbnail" 
-                width="1280" 
-                height="720" 
-                loading="lazy" 
-                decoding="async"
-              >
-              <button class="video-play-btn" aria-label="Play NPR Tiny Desk Concert">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-              </button>
-            </div>
-            <div class="video-info">
-              <span class="video-category">NPR Music</span>
-              <h3 class="video-title">NPR Tiny Desk Concert</h3>
-              <p class="video-meta">Live in Washington, DC • 24 min • 14M+ Views</p>
-            </div>
-          </article>
-
-          <!-- Video 2 -->
-          <article class="video-card" data-embed="symphony-hall" tabindex="0" role="button" aria-label="Play Live at Symphony Hall session">
-            <div class="video-thumbnail-wrap">
-              <img 
-                src="assets/video2.svg" 
-                alt="Live at Symphony Hall concert preview" 
-                class="video-thumbnail" 
-                width="1280" 
-                height="720" 
-                loading="lazy" 
-                decoding="async"
-              >
-              <button class="video-play-btn" aria-label="Play Live at Symphony Hall">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-              </button>
-            </div>
-            <div class="video-info">
-              <span class="video-category">Orchestral Showcase</span>
-              <h3 class="video-title">Live at Symphony Hall</h3>
-              <p class="video-meta">With BBC Concert Orchestra • Full Performance</p>
-            </div>
-          </article>
-
-          <!-- Video 3 -->
-          <article class="video-card" data-embed="blue-note-jam" tabindex="0" role="button" aria-label="Play Late Night Blue Note Jam session">
-            <div class="video-thumbnail-wrap">
-              <img 
-                src="assets/video3.svg" 
-                alt="Late Night Blue Note Jam concert preview" 
-                class="video-thumbnail" 
-                width="1280" 
-                height="720" 
-                loading="lazy" 
-                decoding="async"
-              >
-              <button class="video-play-btn" aria-label="Play Late Night Blue Note Jam">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-              </button>
-            </div>
-            <div class="video-info">
-              <span class="video-category">Residency Exclusive</span>
-              <h3 class="video-title">Late Night Blue Note Jam</h3>
-              <p class="video-meta">Unannounced Superjam Live in Greenwich Village</p>
-            </div>
-          </article>
-
-          <!-- Video 4 -->
-          <article class="video-card" data-embed="doc-black-radio" tabindex="0" role="button" aria-label="Play The Making of Black Radio documentary">
-            <div class="video-thumbnail-wrap">
-              <img 
-                src="assets/video4.svg" 
-                alt="The Making of Black Radio documentary preview" 
-                class="video-thumbnail" 
-                width="1280" 
-                height="720" 
-                loading="lazy" 
-                decoding="async"
-              >
-              <button class="video-play-btn" aria-label="Play The Making of Black Radio">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-              </button>
-            </div>
-            <div class="video-info">
-              <span class="video-category">Studio Documentary</span>
-              <h3 class="video-title">The Making of Black Radio</h3>
-              <p class="video-meta">Behind the Glass at Capitol Studios, Hollywood</p>
-            </div>
-          </article>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         Editorial Biography & Accolades Section
-         ========================================================================== -->
-    <section id="about" class="section section-alt" aria-labelledby="bio-heading">
-      <div class="container">
-        
-        <div class="bio-editorial">
-          
-          <!-- Editorial Portrait & Quote Overlay -->
-          <div class="bio-portrait-wrap">
-            <img 
-              src="assets/Mike.png" 
-              alt="Portrait in the studio" 
-              class="bio-portrait-img" 
-              width="1200" 
-              height="1500" 
-              loading="lazy" 
-              decoding="async"
-            >
-            <div class="bio-quote-overlay">
-              <p class="bio-quote-text">
-                &ldquo;Mike&rdquo;
-              </p>
-            </div>
-          </div>
-
-          <!-- Narrative Content & Accolades -->
-          <div class="bio-content">
-            <span class="section-tag">Biography</span>
-            <h2 id="bio-heading" class="section-title">Made in New York</h2>
-            
-            <p class="bio-text">
-              Bassist, Artist, and Music Director, <strong>Michael Decena</strong> is professional bass player is based and native in New York City. He is known for a deep pocket, musicality, and adaptability across genres. He has experience in touring, studio sessions, and music direction with various artists like Elmiene, Ricky Martin, Mac Ayres, and Maro.
-            </p>
-
-            <!-- Performance & Notable Highlights -->
-            <div class="bio-highlights">
-              <div class="bio-highlight-group">
-                <h3 class="bio-highlight-title"><strong>Performance Highlights</strong></h3>
-                <p class="bio-highlight-text">
-                  Elmiene • Mac Ayres • Maro • Naika • Madison McFerrin • Brian McKnight • Amber Mark • Jennifer Lopez • Dani Murcia • Fuji Kaze • Big Stuff • Sophie Marks • Floyd Fuji • Arin Ray
-                </p>
-              </div>
-
-              <div class="bio-highlight-group">
-                <h3 class="bio-highlight-title"><strong>Notable Highlights</strong></h3>
-                <p class="bio-highlight-text">
-                  SUMER SONIC FEST • Broccoli City Festival • Jimmy Kimmel • Blue Note • Taratata • Various Notable Arenas • V.M.A.S • GroundUp Fest • Meo Sudoeste • AfroPunk
-                </p>
-              </div>
-            </div>
-
-            <!-- Accolades Grid -->
-            <div class="accolades-grid" aria-label="Awards and Accolades">
-              
-              <div class="accolade-item">
-                <div class="accolade-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
-                </div>
-                <div>
-                  <strong>5× GRAMMY® Awards</strong>
-                  <span>Best R&amp;B Album, Best R&amp;B Song, Best Jazz Album</span>
-                </div>
-              </div>
-
-              <div class="accolade-item">
-                <div class="accolade-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
-                </div>
-                <div>
-                  <strong>Peabody Award Winner</strong>
-                  <span>Documentary Original Soundtrack &amp; Composition</span>
-                </div>
-              </div>
-
-              <div class="accolade-item">
-                <div class="accolade-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
-                </div>
-                <div>
-                  <strong>Primetime Emmy® Winner</strong>
-                  <span>Outstanding Original Music and Lyrics</span>
-                </div>
-              </div>
-
-              <div class="accolade-item">
-                <div class="accolade-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
-                </div>
-                <div>
-                  <strong>Blue Note Records Artist</strong>
-                  <span>Over 2 Decades on the Legendary Label</span>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==========================================================================
          Booking, Fan Club & Contact Section
          ========================================================================== -->
-    <section id="contact" class="section" aria-labelledby="contact-heading">
+    <section id="contact" class="section section-alt" aria-labelledby="contact-heading">
       <div class="container">
         
         <header class="section-header">
-          <span class="section-tag">Inquiries &amp; Community</span>
-          <h2 id="contact-heading" class="section-title">Booking, Press &amp; Fan Club</h2>
-          <p class="section-subtitle">
+          <span class="section-tag" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Inquiries &amp; Community</span>
+          <h2 id="contact-heading" class="section-title" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Booking, Press &amp; Fan Club</h2>
+          <p class="section-subtitle" style="font-family: 'Just Another Hand', cursive, sans-serif;">
             Get in touch for performance booking, film composition commissions, or join the inner circle for pre-sale ticket alerts.
           </p>
         </header>
@@ -917,12 +896,12 @@
           
           <!-- Booking / Fan Club Form -->
           <div class="contact-card">
-            <h3>Direct Inquiry Form</h3>
-            <p>Please provide details regarding your event, date, location, or message.</p>
+            <h3 style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Direct Inquiry Form</h3>
+            <p style="font-family: 'Just Another Hand', cursive, sans-serif;">Please provide details regarding your event, date, location, or message.</p>
 
             <form id="contact-form" novalidate>
               <div class="form-group">
-                <label for="contact-name" class="form-label">Full Name *</label>
+                <label for="contact-name" class="form-label" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Full Name *</label>
                 <input 
                   type="text" 
                   id="contact-name" 
@@ -931,11 +910,12 @@
                   placeholder="e.g. Marcus Miller" 
                   required 
                   autocomplete="name"
+                  style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: 1.25rem;"
                 >
               </div>
 
               <div class="form-group">
-                <label for="contact-email" class="form-label">Email Address *</label>
+                <label for="contact-email" class="form-label" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Email Address *</label>
                 <input 
                   type="email" 
                   id="contact-email" 
@@ -944,12 +924,13 @@
                   placeholder="you@example.com" 
                   required 
                   autocomplete="email"
+                  style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: 1.25rem;"
                 >
               </div>
 
               <div class="form-group">
-                <label for="contact-subject" class="form-label">Inquiry Subject *</label>
-                <select id="contact-subject" name="subject" class="form-input">
+                <label for="contact-subject" class="form-label" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Inquiry Subject *</label>
+                <select id="contact-subject" name="subject" class="form-input" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: 1.25rem;">
                   <option value="booking">Concert / Tour Booking</option>
                   <option value="scoring">Film &amp; TV Scoring Commission</option>
                   <option value="press">Press / Interview Request</option>
@@ -958,17 +939,18 @@
               </div>
 
               <div class="form-group">
-                <label for="contact-message" class="form-label">Message *</label>
+                <label for="contact-message" class="form-label" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Message *</label>
                 <textarea 
                   id="contact-message" 
                   name="message" 
                   class="form-textarea" 
                   placeholder="Tell us about the concert, festival, venue or project..." 
                   required
+                  style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: 1.25rem;"
                 ></textarea>
               </div>
 
-              <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 0.5rem;">
+              <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 0.5rem; font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">
                 Submit Inquiry
               </button>
             </form>
@@ -978,34 +960,34 @@
           <div class="agency-contacts">
             
             <div class="agency-card">
-              <span class="agency-card-role">North America &amp; Worldwide Booking</span>
-              <h4 class="agency-card-name">Wasserman Music</h4>
-              <p style="color: var(--text-secondary); font-size: var(--fs-sm); margin-bottom: 0.5rem;">
+              <span class="agency-card-role" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">North America &amp; Worldwide Booking</span>
+              <h4 class="agency-card-name" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Wasserman Music</h4>
+              <p class="agency-card-desc" style="color: var(--text-secondary); font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.55rem); margin-bottom: 0.5rem; font-family: 'Just Another Hand', cursive, sans-serif;">
                 Agent: Jonathan Levine / Christian Bernhardt
               </p>
-              <a href="mailto:booking@robertglasper.com" class="agency-card-link">
+              <a href="mailto:booking@robertglasper.com" class="agency-card-link" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">
                 booking@robertglasper.com
               </a>
             </div>
 
             <div class="agency-card">
-              <span class="agency-card-role">Global Artist Management</span>
-              <h4 class="agency-card-name">Vanguard Management Group</h4>
-              <p style="color: var(--text-secondary); font-size: var(--fs-sm); margin-bottom: 0.5rem;">
+              <span class="agency-card-role" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Global Artist Management</span>
+              <h4 class="agency-card-name" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Vanguard Management Group</h4>
+              <p class="agency-card-desc" style="color: var(--text-secondary); font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.55rem); margin-bottom: 0.5rem; font-family: 'Just Another Hand', cursive, sans-serif;">
                 Management &amp; Special Project Inquiries
               </p>
-              <a href="mailto:mgmt@robertglasper.com" class="agency-card-link">
+              <a href="mailto:mgmt@robertglasper.com" class="agency-card-link" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">
                 mgmt@robertglasper.com
               </a>
             </div>
 
             <div class="agency-card">
-              <span class="agency-card-role">Record Label &amp; Sync Licensing</span>
-              <h4 class="agency-card-name">Blue Note Records / Universal Music</h4>
-              <p style="color: var(--text-secondary); font-size: var(--fs-sm); margin-bottom: 0.5rem;">
+              <span class="agency-card-role" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Record Label &amp; Sync Licensing</span>
+              <h4 class="agency-card-name" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Blue Note Records / Universal Music</h4>
+              <p class="agency-card-desc" style="color: var(--text-secondary); font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.55rem); margin-bottom: 0.5rem; font-family: 'Just Another Hand', cursive, sans-serif;">
                 Publicity, Press Kits &amp; Commercial Sync
               </p>
-              <a href="mailto:press@bluenote.com" class="agency-card-link">
+              <a href="mailto:press@bluenote.com" class="agency-card-link" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">
                 press@bluenote.com
               </a>
             </div>
@@ -1026,7 +1008,7 @@
     <div class="container">
       
       <div class="footer-top">
-        <div class="footer-brand">
+        <div class="footer-brand" style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">
           MICHAEL DECENA<span class="brand-dot" aria-hidden="true"></span>
         </div>
 
@@ -1052,11 +1034,11 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2026 Michael Decena. All rights reserved. Designed to WCAG 2.1 AA accessibility standards.</p>
+        <p style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">&copy; 2026 Michael Decena. All rights reserved. Designed to WCAG 2.1 AA accessibility standards.</p>
         <div class="footer-links">
-          <a href="#hero" class="footer-link">Back to Top ↑</a>
-          <a href="#contact" class="footer-link">Press Inquiries</a>
-          <a href="#tour" class="footer-link">Tour Archive</a>
+          <a href="#hero" class="footer-link" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Back to Top ↑</a>
+          <a href="#contact" class="footer-link" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Press Inquiries</a>
+          <a href="#tour" class="footer-link" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Tour Archive</a>
         </div>
       </div>
 

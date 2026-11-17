@@ -1,55 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&family=Permanent+Marker&display=swap');
+
 /* ==========================================================================
    Design Tokens & Modern CSS Reset
    Adhering to AGENTS.md: Web Design, Accessibility & Mobile Optimization
    ========================================================================== */
-  @import url('https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap');
-/* Font Face: Dear Joe with system and asset fallbacks */
-/*
+
+/* Font Face: Dear Joe local OTF and system fallbacks */
 @font-face {
   font-family: 'Dear Joe';
-  src: local('Dear Joe'),
+  src: url('../assets/DearJoe1MS 400.otf') format('opentype'),
+       url('../assets/DearJoe1MS%20400.otf') format('opentype'),
+       local('Dear Joe'),
        local('dearJoe'),
-       local('DearJoe 4'),
-       local('dearJoe 4'),
-       local('dearJoe 5 CASUAL'),
-       local('DearJoe 1'),
-       url('../assets/dearjoe.woff2') format('woff2'),
-       url('../assets/dearjoe.woff') format('woff'),
-       url('../assets/dearjoe.ttf') format('truetype'),
-       url('../assets/dearjoe.otf') format('opentype');
-  font-display: swap;
+       local('DearJoe 1');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
-*/
 
-
-/*
 @font-face {
   font-family: 'dearJoe';
-  src: local('dearJoe'),
+  src: url('../assets/DearJoe1MS 400.otf') format('opentype'),
+       url('../assets/DearJoe1MS%20400.otf') format('opentype'),
+       local('dearJoe'),
        local('Dear Joe'),
-       local('DearJoe 4'),
-       local('dearJoe 4'),
-       url('../assets/dearjoe.woff2') format('woff2'),
-       url('../assets/dearjoe.woff') format('woff'),
-       url('../assets/dearjoe.ttf') format('truetype');
+       local('DearJoe 1');
+  font-weight: normal;
+  font-style: normal;
   font-display: swap;
 }
-*/
 
-@font-face {
-  font-family: 'Dear Joe';
-  src: url('../assets/DearJoe1MS 400.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
+/* Font Face: Just Another Hand TTF and Google Fonts fallback */
 @font-face {
   font-family: 'Just Another Hand';
-  src: url('../assets/JustAnotherHand-Regular.ttf') format('opentype');
+  src: url('../assets/JustAnotherHand-Regular.ttf') format('truetype'),
+       url('../assets/JustAnotherHand-Regular.ttf') format('opentype'),
+       local('Just Another Hand');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
+}
+
+/* Font Face: Permanent Marker TTF and Google Fonts fallback */
+@font-face {
+  font-family: 'Permanent Marker';
+  src: url('../assets/PermanentMarker-Regular.ttf') format('truetype'),
+       local('Permanent Marker'),
+       local('PermanentMarker');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 
@@ -83,36 +83,52 @@
 
   /* ==========================================================================
      Typography & Section Font Customization Controls
-     Default font: "Dear Joe"
-     To customize any section's font individually, edit its variable below:
+     - Headers, Titles, Brand Logo & Yellow Accent Tags: "Dear Joe"
+     - Sub text, Bio Narrative, Highlights & Descriptions: "Just Another Hand"
      ========================================================================== */
-  --font-dear-joe: 'Dear Joe', 'dearJoe', 'dearJoe 4', 'dearJoe 5 CASUAL', 'DearJoe 1', cursive, sans-serif;
+  --font-dear-joe: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
   --font-just-another-hand: 'Just Another Hand', cursive, sans-serif;
-  /* Global Default Font */
-  --font-global: var(--font-dear-joe);
-  --font-display: var(--font-global);
-  --font-body: var(--font-global);
+  --font-permanent-marker: 'Permanent Marker', cursive, sans-serif;
 
-  /* Section-Specific Font Overrides:
-     Replace 'var(--font-global)' with any font name (e.g. 'Syne', sans-serif)
-     to change that section's font independently: */
-  --font-section-nav: var(--font-global);       /* Navigation Bar & Mobile Drawer */
-  --font-section-hero: var(--font-global);      /* Hero Header & Quick Links */
-  --font-section-tour: var(--font-global);      /* Catch Me Live / Tour Dates */
-  --font-section-music: var(--font-global);     /* Discography & Releases */
-  --font-section-videos: var(--font-global);    /* Videos & Live Performances */
-  --font-section-about: var(--font-global);     /* Bio, Highlights & Accolades */
-  --font-section-contact: var(--font-global);   /* Contact & Booking Agency */
-  --font-section-footer: var(--font-global);    /* Footer Landmark */
-  --font-section-modal: var(--font-global);     /* Media Dialog Modal */
+  /* Global Default Font Roles */
+  --font-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-body: 'Just Another Hand', cursive, sans-serif;
+
+  /* Section-Specific Font Overrides (change headers or subtext for any section here): */
+  --font-section-nav-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-nav-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-hero-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-hero-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-tour-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-tour-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-music-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-music-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-videos-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-videos-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-about-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-about-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-contact-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-contact-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-footer-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-footer-body: 'Just Another Hand', cursive, sans-serif;
+
+  --font-section-modal-display: 'Dear Joe', 'dearJoe', 'DearJoe 1', cursive, sans-serif;
+  --font-section-modal-body: 'Just Another Hand', cursive, sans-serif;
 
   --fs-hero: clamp(2.5rem, 6.5vw + 1rem, 6rem);
   --fs-h1: clamp(2rem, 4vw + 0.5rem, 3.75rem);
   --fs-h2: clamp(1.75rem, 3vw + 0.25rem, 2.75rem);
   --fs-h3: clamp(1.25rem, 2vw + 0.2rem, 1.75rem);
-  --fs-body: clamp(0.95rem, 0.85rem + 0.35vw, 1.125rem);
-  --fs-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
-  --fs-xs: 0.75rem;
+  --fs-body: clamp(1.25rem, 1.1rem + 0.45vw, 1.55rem);
+  --fs-sm: clamp(1.1rem, 1rem + 0.3vw, 1.35rem);
+  --fs-xs: clamp(0.95rem, 0.9rem + 0.2vw, 1.15rem);
 
   /* Spacing Scale */
   --space-xs: 0.5rem;
@@ -151,6 +167,8 @@ html {
   background-color: var(--bg-primary);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -160,6 +178,8 @@ body {
   display: flex;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom);
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 /* Eliminate component-level overflow while preserving zoomability */
@@ -198,63 +218,175 @@ ul, ol {
 
 .site-header,
 .mobile-nav-dialog {
-  --font-display: var(--font-section-nav);
-  --font-body: var(--font-section-nav);
-  font-family: var(--font-section-nav);
+  --font-display: var(--font-section-nav-display);
+  --font-body: var(--font-section-nav-body);
+  font-family: var(--font-section-nav-body);
 }
 
 #hero {
-  --font-display: var(--font-section-hero);
-  --font-body: var(--font-section-hero);
-  font-family: var(--font-section-hero);
+  --font-display: var(--font-section-hero-display);
+  --font-body: var(--font-section-hero-body);
+  font-family: var(--font-section-hero-body);
+}
+
+#hero .hero-title,
+#hero .hero-link-pill,
+#hero .hero-accolade-badge,
+#hero .btn {
+  font-family: var(--font-section-hero-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+#hero .hero-lead {
+  font-family: var(--font-section-hero-body, 'Just Another Hand', cursive, sans-serif) !important;
+  font-size: clamp(1.5rem, 1.35rem + 0.7vw, 2.1rem) !important;
+  line-height: 1.35;
+  letter-spacing: 0.025em;
 }
 
 #tour {
-  --font-display: var(--font-section-tour);
-  --font-body: var(--font-section-tour);
-  font-family: var(--font-section-tour);
+  --font-display: var(--font-section-tour-display);
+  --font-body: var(--font-section-tour-body);
+  font-family: var(--font-section-tour-body);
+}
+
+#tour .section-tag,
+#tour .section-title,
+#tour .tour-month,
+#tour .tour-day,
+#tour .tour-weekday,
+#tour .tour-city,
+#tour .filter-pill,
+#tour .btn {
+  font-family: var(--font-section-tour-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+#tour .section-subtitle,
+#tour .tour-country,
+#tour .tour-artist-name,
+#tour .tour-venue,
+#tour .tour-details-tag {
+  font-family: var(--font-section-tour-body, 'Just Another Hand', cursive, sans-serif) !important;
 }
 
 #music {
-  --font-display: var(--font-section-music);
-  --font-body: var(--font-section-music);
-  font-family: var(--font-section-music);
+  --font-display: var(--font-section-music-display);
+  --font-body: var(--font-section-music-body);
+  font-family: var(--font-section-music-body);
+}
+
+#music .section-tag,
+#music .section-title,
+#music .album-title,
+#music .album-vinyl-overlay,
+#music .stream-link {
+  font-family: var(--font-section-music-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+#music .section-subtitle,
+#music .album-meta,
+#music .album-description {
+  font-family: var(--font-section-music-body, 'Just Another Hand', cursive, sans-serif) !important;
 }
 
 #videos {
-  --font-display: var(--font-section-videos);
-  --font-body: var(--font-section-videos);
-  font-family: var(--font-section-videos);
+  --font-display: var(--font-section-videos-display);
+  --font-body: var(--font-section-videos-body);
+  font-family: var(--font-section-videos-body);
+}
+
+#videos .section-tag,
+#videos .section-title,
+#videos .video-title {
+  font-family: var(--font-section-videos-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+#videos .section-subtitle,
+#videos .video-category,
+#videos .video-meta {
+  font-family: var(--font-section-videos-body, 'Just Another Hand', cursive, sans-serif) !important;
 }
 
 #about {
-  --font-display: var(--font-section-about);
-  --font-body: var(--font-section-about);
-  font-family: var(--font-section-about);
+  --font-display: var(--font-section-about-display);
+  --font-body: var(--font-section-about-body);
+  font-family: var(--font-section-about-body);
+}
+
+#about .section-tag,
+#about .section-title,
+#about .bio-highlight-title,
+#about .bio-highlight-title strong,
+#about .accolade-item strong {
+  font-family: var(--font-section-about-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+#about .bio-quote-text {
+  font-family: var(--font-permanent-marker, 'Permanent Marker', cursive, sans-serif) !important;
+}
+
+#about .bio-text,
+#about .bio-text strong,
+#about .bio-highlight-text,
+#about .accolade-item span {
+  font-family: var(--font-section-about-body, 'Just Another Hand', cursive, sans-serif) !important;
 }
 
 #contact {
-  --font-display: var(--font-section-contact);
-  --font-body: var(--font-section-contact);
-  font-family: var(--font-section-contact);
+  --font-display: var(--font-section-contact-display);
+  --font-body: var(--font-section-contact-body);
+  font-family: var(--font-section-contact-body);
+}
+
+#contact .section-tag,
+#contact .section-title,
+#contact .contact-card h3,
+#contact .agency-card-role,
+#contact .agency-card-name,
+#contact .btn {
+  font-family: var(--font-section-contact-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+#contact .section-subtitle,
+#contact .contact-card p,
+#contact .agency-card p,
+#contact .form-label,
+#contact .form-input,
+#contact .form-textarea,
+#contact .agency-card-desc,
+#contact .agency-card-link {
+  font-family: var(--font-section-contact-body, 'Just Another Hand', cursive, sans-serif) !important;
 }
 
 .site-footer {
-  --font-display: var(--font-section-footer);
-  --font-body: var(--font-section-footer);
-  font-family: var(--font-section-footer);
+  --font-display: var(--font-section-footer-display);
+  --font-body: var(--font-section-footer-body);
+  font-family: var(--font-section-footer-body);
+}
+
+.site-footer .footer-brand {
+  font-family: var(--font-section-footer-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+.site-footer p,
+.site-footer .footer-link {
+  font-family: var(--font-section-footer-body, 'Just Another Hand', cursive, sans-serif) !important;
+  font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);
 }
 
 .media-modal {
-  --font-display: var(--font-section-modal);
-  --font-body: var(--font-section-modal);
-  font-family: var(--font-section-modal);
+  --font-display: var(--font-section-modal-display);
+  --font-body: var(--font-section-modal-body);
+  font-family: var(--font-section-modal-body);
 }
 
-/* Skip link for keyboard accessibility */
+.media-modal-header h3 {
+  font-family: var(--font-section-modal-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+}
+
+/* Skip link for keyboard accessibility (Zero negative-margin/coordinate overflow) */
 .skip-to-content {
-  position: absolute;
-  top: -100px;
+  position: fixed;
+  top: 1rem;
   left: 1rem;
   z-index: 9999;
   background: var(--accent-gold);
@@ -262,11 +394,12 @@ ul, ol {
   padding: 0.75rem 1.25rem;
   font-weight: 700;
   border-radius: 4px;
-  transition: top var(--transition-fast);
+  transform: translateY(-200%);
+  transition: transform var(--transition-fast);
 }
 
 .skip-to-content:focus {
-  top: 1rem;
+  transform: translateY(0);
 }
 
 /* Accessible Visually Hidden utility */
@@ -318,6 +451,7 @@ ul, ol {
 }
 
 .section-tag {
+  font-family: var(--font-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
   font-size: var(--fs-xs);
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -338,7 +472,7 @@ ul, ol {
 }
 
 .section-title {
-  font-family: var(--font-display);
+  font-family: var(--font-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
   font-size: var(--fs-h2);
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -347,9 +481,12 @@ ul, ol {
 }
 
 .section-subtitle {
+  font-family: var(--font-body, 'Just Another Hand', cursive, sans-serif) !important;
   color: var(--text-secondary);
-  font-size: var(--fs-body);
-  max-width: 60ch;
+  font-size: clamp(1.4rem, 1.25rem + 0.6vw, 1.85rem) !important;
+  line-height: 1.35;
+  letter-spacing: 0.025em;
+  max-width: 65ch;
 }
 
 /* ==========================================================================
@@ -357,6 +494,7 @@ ul, ol {
    ========================================================================== */
 
 .btn {
+  font-family: var(--font-display);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -484,24 +622,22 @@ ul, ol {
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   min-height: 48px;
   padding-block: 0.25rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  transition: transform 240ms cubic-bezier(0.25, 1, 0.5, 1), text-shadow 240ms ease, color 240ms ease;
+  transform-origin: left center;
 }
 
-.brand-logo:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.brand-logo:hover,
+.brand-logo:focus-visible {
+  color: #ffffff;
+  transform: translateY(-3px) scale(1.06);
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.85);
 }
 
 .brand-dot {
-  width: 7px;
-  height: 7px;
-  background-color: var(--accent-gold);
-  border-radius: 50%;
-  display: inline-block;
+  display: none !important;
 }
 
 /* Hamburger Menu Button (Right Side) */
@@ -531,6 +667,10 @@ ul, ol {
 }
 
 /* Mobile Drawer Dialog */
+.mobile-nav-dialog:not([open]) {
+  display: none !important;
+}
+
 .mobile-nav-dialog {
   position: fixed;
   inset: 0;
@@ -639,8 +779,8 @@ ul, ol {
 
 .hero-video-toggle-btn {
   position: absolute;
-  bottom: clamp(1.25rem, 3vw, 2.25rem);
-  right: clamp(1rem, 4vw, 2.5rem);
+  bottom: clamp(1rem, 2.5vw, 1.75rem);
+  right: max(clamp(1.25rem, 3.5vw, 3rem), env(safe-area-inset-right));
   z-index: 10;
   display: inline-flex;
   align-items: center;
@@ -684,9 +824,12 @@ ul, ol {
 .hero-content {
   position: relative;
   z-index: 2;
-  padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
-  padding-top: clamp(1.5rem, 3vw, 2.5rem);
   width: 100%;
+  max-width: 100%;
+  padding-left: max(clamp(1.25rem, 3.5vw, 3rem), env(safe-area-inset-left));
+  padding-right: max(clamp(1.25rem, 3.5vw, 3rem), env(safe-area-inset-right));
+  padding-bottom: clamp(4.5rem, 6.5vw, 6rem);
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
 }
 
 .hero-nav-links {
@@ -694,48 +837,57 @@ ul, ol {
   flex-wrap: wrap;
   gap: 0.85rem;
   align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .hero-nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 1.25rem;
+  }
 }
 
 .hero-link-pill {
+  font-family: var(--font-display);
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: center;
   min-height: 48px;
   min-width: 48px;
   padding: 0.65rem 1.4rem;
   border-radius: 9999px;
-  background: rgba(12, 12, 14, 0.78);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: var(--text-primary);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none;
+  color: rgba(255, 255, 255, 0.72);
   font-size: var(--fs-sm);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  box-shadow: none;
+  transition: transform 240ms cubic-bezier(0.25, 1, 0.5, 1), text-shadow 240ms ease, color 240ms ease;
   touch-action: manipulation;
+  white-space: nowrap;
 }
 
-.hero-link-pill svg {
-  color: var(--accent-gold);
-  transition: transform var(--transition-fast);
-}
-
-.hero-link-pill:hover {
-  background: rgba(212, 175, 55, 0.2);
-  border-color: var(--accent-gold);
+.hero-link-pill:hover,
+.hero-link-pill:focus-visible {
   color: #ffffff;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(212, 175, 55, 0.25);
-}
-
-.hero-link-pill:hover svg {
-  transform: translate(2px, -2px);
-}
+  transform: translateY(-4px) scale(1.08);
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.85);
+  background: transparent !important;
+  border: none;
+  box-shadow: none;
 }
 
 .hero-accolade-badge {
+  font-family: var(--font-display);
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -768,9 +920,11 @@ ul, ol {
 }
 
 .hero-lead {
-  font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+  font-family: var(--font-body);
+  font-size: clamp(1.4rem, 1.5vw, 1.9rem);
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
   max-width: 58ch;
   margin-bottom: 2.25rem;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
@@ -1074,9 +1228,9 @@ ul, ol {
 }
 
 .album-description {
-  font-size: var(--fs-sm);
+  font-size: clamp(1.35rem, 1.2rem + 0.5vw, 1.7rem);
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.4;
   margin-bottom: 0.5rem;
 }
 
@@ -1202,7 +1356,7 @@ ul, ol {
 }
 
 .video-meta {
-  font-size: var(--fs-sm);
+  font-size: clamp(1.25rem, 1.15rem + 0.35vw, 1.55rem);
   color: var(--text-secondary);
 }
 
@@ -1252,11 +1406,12 @@ ul, ol {
 }
 
 .bio-quote-text {
-  font-family: var(--font-display);
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
-  font-style: italic;
+  font-family: var(--font-permanent-marker, 'Permanent Marker', cursive, sans-serif) !important;
+  font-size: clamp(1.4rem, 1.8vw, 2.1rem);
+  font-style: normal;
   color: var(--accent-gold);
-  line-height: 1.4;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
 }
 
 .bio-content {
@@ -1266,13 +1421,17 @@ ul, ol {
 }
 
 .bio-text {
+  font-family: var(--font-section-about-body, 'Just Another Hand', cursive, sans-serif) !important;
   color: var(--text-secondary);
-  font-size: var(--fs-body);
-  line-height: 1.8;
+  font-size: clamp(1.4rem, 1.25rem + 0.6vw, 1.85rem);
+  line-height: 1.4;
+  letter-spacing: 0.03em;
 }
 
 .bio-text strong {
+  font-family: inherit !important;
   color: var(--text-primary);
+  font-weight: 700;
 }
 
 /* Performance & Notable Highlights */
@@ -1290,7 +1449,7 @@ ul, ol {
 }
 
 .bio-highlight-title {
-  font-family: var(--font-display);
+  font-family: var(--font-section-about-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
   font-size: var(--fs-h3);
   font-weight: 800;
   color: var(--text-primary);
@@ -1298,14 +1457,17 @@ ul, ol {
 }
 
 .bio-highlight-title strong {
+  font-family: var(--font-section-about-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
   font-weight: 800;
   color: var(--text-primary);
 }
 
 .bio-highlight-text {
+  font-family: var(--font-section-about-body, 'Just Another Hand', cursive, sans-serif) !important;
   color: var(--text-secondary);
-  font-size: var(--fs-body);
-  line-height: 1.7;
+  font-size: clamp(1.35rem, 1.2rem + 0.5vw, 1.75rem);
+  line-height: 1.4;
+  letter-spacing: 0.03em;
 }
 
 /* Accolades List */
@@ -1343,13 +1505,17 @@ ul, ol {
 }
 
 .accolade-item strong {
+  font-family: var(--font-display);
   display: block;
   font-size: var(--fs-sm);
   color: var(--text-primary);
 }
 
 .accolade-item span {
-  font-size: var(--fs-xs);
+  font-family: var(--font-body);
+  font-size: clamp(1.2rem, 1.05rem + 0.3vw, 1.4rem);
+  line-height: 1.35;
+  letter-spacing: 0.02em;
   color: var(--text-muted);
 }
 
@@ -1385,7 +1551,7 @@ ul, ol {
 
 .contact-card p {
   color: var(--text-secondary);
-  font-size: var(--fs-body);
+  font-size: clamp(1.4rem, 1.25rem + 0.6vw, 1.85rem);
   margin-bottom: 1.75rem;
 }
 
@@ -1397,9 +1563,9 @@ ul, ol {
 }
 
 .form-label {
-  font-size: var(--fs-xs);
+  font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-secondary);
 }
@@ -1458,8 +1624,15 @@ ul, ol {
   margin-bottom: 0.25rem;
 }
 
+.agency-card-desc,
+.agency-card p {
+  font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.55rem);
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
 .agency-card-link {
-  font-size: var(--fs-sm);
+  font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.55rem);
   color: var(--text-secondary);
   min-height: 48px;
   display: inline-flex;
@@ -1573,6 +1746,10 @@ ul, ol {
 /* ==========================================================================
    Video / Audio Preview Modal
    ========================================================================== */
+
+.media-modal:not([open]) {
+  display: none !important;
+}
 
 .media-modal {
   position: fixed;
