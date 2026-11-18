@@ -1,0 +1,38 @@
+name: Sync Google Calendar Events
+
+on:
+  schedule:
+    # Runs twice every day at 00:00 and 12:00 UTC (every 12 hours)
+    - cron: '0 0,12 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI anytime
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync Live Tour Dates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Calendar Sync
+        run: python sync_calendar.py
+
+      - name: Commit and push changes if updated
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/tour-dates.json index.html
+          if git diff --staged --quiet; then
+            echo "No changes found in Google Calendar events."
+          else
+            git commit -m "chore(tour): auto-sync Google Calendar events [skip ci]"
+            git push
+          fi

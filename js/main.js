@@ -132,15 +132,146 @@ function initMobileNav() {
 }
 
 /**
- * 2. Tour Filter Category Switching
+ * 2. Tour Filter Category Switching & Pagination (Max 8 Events per Page)
  */
 function initTourFilters() {
   const filterPills = document.querySelectorAll('.filter-pill');
   const tourCards = document.querySelectorAll('.tour-card');
+  const emptyState = document.getElementById('tour-empty-state');
+  const paginationNav = document.getElementById('tour-pagination');
+  const prevBtn = document.getElementById('tour-page-prev');
+  const nextBtn = document.getElementById('tour-page-next');
+  const pageNumbersContainer = document.getElementById('tour-page-numbers');
 
+  const PAGE_SIZE = 8;
+  let currentCategory = 'all';
+  let currentPage = 1;
+
+  function updateDisplay(scrollOnChange = false) {
+    // 1. Determine cards matching active category
+    const matchingCards = [];
+    tourCards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      if (currentCategory === 'all' || cardCategory === currentCategory) {
+        matchingCards.push(card);
+      }
+    });
+
+    const totalMatching = matchingCards.length;
+
+    // 2. Handle 0 matching events (Empty State)
+    if (totalMatching === 0) {
+      tourCards.forEach(card => { card.style.display = 'none'; });
+      if (emptyState) emptyState.style.display = 'flex';
+      if (paginationNav) paginationNav.style.display = 'none';
+      return;
+    }
+
+    // Hide empty state if we have matching events
+    if (emptyState) emptyState.style.display = 'none';
+
+    // 3. Calculate pagination
+    const totalPages = Math.ceil(totalMatching / PAGE_SIZE);
+    if (currentPage > totalPages) {
+      currentPage = 1;
+    }
+
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+
+    // 4. Update card visibility
+    tourCards.forEach(card => {
+      card.style.display = 'none';
+    });
+
+    matchingCards.forEach((card, index) => {
+      if (index >= startIndex && index < endIndex) {
+        card.style.display = 'grid';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // 5. Update pagination UI (show only if > 8 items)
+    if (totalPages <= 1) {
+      if (paginationNav) paginationNav.style.display = 'none';
+    } else {
+      if (paginationNav) {
+        paginationNav.style.display = 'flex';
+
+        // Update Prev / Next buttons
+        if (prevBtn) {
+          prevBtn.disabled = (currentPage === 1);
+        }
+        if (nextBtn) {
+          nextBtn.disabled = (currentPage === totalPages);
+        }
+
+        // Render page numbers
+        if (pageNumbersContainer) {
+          pageNumbersContainer.innerHTML = '';
+          for (let p = 1; p <= totalPages; p++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.type = 'button';
+            pageBtn.className = 'tour-page-num' + (p === currentPage ? ' active' : '');
+            pageBtn.textContent = p;
+            pageBtn.setAttribute('aria-label', 'Page ' + p);
+            if (p === currentPage) {
+              pageBtn.setAttribute('aria-current', 'page');
+            }
+            pageBtn.addEventListener('click', () => {
+              if (currentPage !== p) {
+                currentPage = p;
+                updateDisplay(true);
+              }
+            });
+            pageNumbersContainer.appendChild(pageBtn);
+          }
+        }
+      }
+    }
+
+    // 6. Smooth scroll to tour heading on page change if requested
+    if (scrollOnChange) {
+      const tourHeading = document.getElementById('tour-heading');
+      if (tourHeading) {
+        const yOffset = -90;
+        const y = tourHeading.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  }
+
+  // Previous button handler
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        updateDisplay(true);
+      }
+    });
+  }
+
+  // Next button handler
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const matchingCount = Array.from(tourCards).filter(c => {
+        const cat = c.getAttribute('data-category');
+        return currentCategory === 'all' || cat === currentCategory;
+      }).length;
+      const totalPages = Math.ceil(matchingCount / PAGE_SIZE);
+      if (currentPage < totalPages) {
+        currentPage++;
+        updateDisplay(true);
+      }
+    });
+  }
+
+  // Filter Pill buttons
   filterPills.forEach(pill => {
     pill.addEventListener('click', () => {
-      const category = pill.getAttribute('data-filter');
+      currentCategory = pill.getAttribute('data-filter') || 'all';
+      currentPage = 1;
 
       // Update ARIA and active states
       filterPills.forEach(p => {
@@ -150,17 +281,12 @@ function initTourFilters() {
       pill.classList.add('active');
       pill.setAttribute('aria-selected', 'true');
 
-      // Filter tour items
-      tourCards.forEach(card => {
-        const cardCategory = card.getAttribute('data-category');
-        if (category === 'all' || cardCategory === category) {
-          card.style.display = 'grid';
-        } else {
-          card.style.display = 'none';
-        }
-      });
+      updateDisplay(false);
     });
   });
+
+  // Initial setup run
+  updateDisplay(false);
 }
 
 /**
