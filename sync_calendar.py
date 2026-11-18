@@ -2,14 +2,18 @@
 """
 sync_calendar.py
 Fetches Michael Decena's public Google Calendar feed, parses upcoming tour dates,
-and updates assets/tour-dates.json and index.html.
+and updates assets/tour-dates.json and index.html with:
+- Max 8 events per page
+- Interactive pagination (if > 8 events)
+- "No upcoming performances" empty state (if 0 events)
 """
 
 import os
 import re
 import json
+import math
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime
 import zoneinfo
 
 CALENDAR_ICS_URL = (
@@ -17,6 +21,8 @@ CALENDAR_ICS_URL = (
     "137a3be20cdf492d3b3cb9f49dd0922692cdfec1d500f95bc8977ff09a2c3672%40group.calendar.google.com"
     "/public/basic.ics"
 )
+
+PAGE_SIZE = 8
 
 # Base default European tour shows (Sounds for Someone Tour)
 BASE_EUROPE_SHOWS = [
@@ -303,13 +309,38 @@ def fetch_google_calendar_events():
     return cal_events
 
 def generate_tour_cards_html(events):
-    cards_html = []
+    empty_style = "display: flex;" if len(events) == 0 else "display: none;"
+    
+    empty_html = f"""          <!-- Empty State (Displayed when 0 shows are scheduled) -->
+          <div id="tour-empty-state" class="tour-empty-state" role="status" aria-live="polite" style="{empty_style}">
+            <div class="tour-empty-icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3 class="tour-empty-title">No Upcoming Performances Scheduled</h3>
+            <p class="tour-empty-subtitle">New headline dates, festival appearances, and live shows are currently in preparation. Check back soon or submit an inquiry below for booking commissions and sessions.</p>
+            <a href="#contact" class="btn btn-primary tour-empty-btn">
+              Book Michael Decena
+            </a>
+          </div>"""
+
+    if not events:
+        return empty_html
+
+    cards_html = [empty_html]
     for i, ev in enumerate(events, 1):
         target_attr = ' target="_blank" rel="noopener noreferrer"' if ev["ticketUrl"].startswith("http") else ''
         aria_label = f"Inquire about {ev['month']} {ev['day']} {ev['summary']} in {ev['city']}" if ev['isPrivate'] else f"Get tickets for {ev['month']} {ev['day']} at {ev['venue']} {ev['city']}"
         
+        # Paginate: Only show the first PAGE_SIZE (8) cards statically
+        hide_style = ' style="display: none;"' if (i > PAGE_SIZE) else ''
+        
         card = f"""          <!-- Show {i}: {ev['city']} {ev['venue']} -->
-          <article class="tour-card" data-category="{ev['category']}">
+          <article class="tour-card" data-category="{ev['category']}" data-tour-index="{i - 1}"{hide_style}>
             <div class="tour-date-col">
               <span class="tour-month">{ev['month']}</span>
               <span class="tour-day">{ev['day']}</span>
@@ -339,6 +370,40 @@ def generate_tour_cards_html(events):
         
     return "\n\n".join(cards_html)
 
+def generate_pagination_html(total_events):
+    total_pages = math.ceil(total_events / PAGE_SIZE) if total_events > 0 else 1
+    nav_style = "display: flex;" if total_pages > 1 else "display: none;"
+    
+    page_nums_html = []
+    for p in range(1, total_pages + 1):
+        active_cls = " active" if p == 1 else ""
+        current_attr = ' aria-current="page"' if p == 1 else ""
+        btn = f'<button class="tour-page-num{active_cls}" type="button" aria-label="Page {p}"{current_attr}>{p}</button>'
+        page_nums_html.append(f"            {btn}")
+        
+    pages_inner = "\n".join(page_nums_html) if page_nums_html else ""
+    
+    return f"""        <!-- Tour Pagination Controls (Max {PAGE_SIZE} Shows per Page) -->
+        <nav id="tour-pagination" class="tour-pagination" aria-label="Tour dates pagination" style="{nav_style}">
+          <button id="tour-page-prev" class="tour-page-btn tour-page-prev" type="button" aria-label="Previous page of tour dates" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Prev</span>
+          </button>
+          
+          <div id="tour-page-numbers" class="tour-page-numbers" role="navigation" aria-label="Page numbers">
+{pages_inner}
+          </div>
+
+          <button id="tour-page-next" class="tour-page-btn tour-page-next" type="button" aria-label="Next page of tour dates">
+            <span>Next</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </nav>"""
+
 def main():
     repo_dir = os.path.dirname(os.path.abspath(__file__))
     assets_dir = os.path.join(repo_dir, "assets")
@@ -365,7 +430,7 @@ def main():
             
     # Sort chronologically
     all_events.sort(key=lambda e: e["isoDate"])
-    print(f"[2/4] Total merged tour events: {len(all_events)}")
+    print(f"[2/4] Total tour events: {len(all_events)} (Paginated at max {PAGE_SIZE} per page)")
 
     # Write assets/tour-dates.json
     print(f"[3/4] Writing {json_path}...")
@@ -379,6 +444,7 @@ def main():
         content = f.read()
 
     cards_html = generate_tour_cards_html(all_events)
+    pagination_html = generate_pagination_html(len(all_events))
     
     start_marker = "<!-- TOUR_DATES_START -->"
     end_marker = "<!-- TOUR_DATES_END -->"
@@ -386,32 +452,49 @@ def main():
     if start_marker in content and end_marker in content:
         pattern = re.compile(rf"{re.escape(start_marker)}.*?{re.escape(end_marker)}", re.DOTALL)
         replacement = f"{start_marker}\n{cards_html}\n          {end_marker}"
-        new_content = pattern.sub(replacement, content)
+        content = pattern.sub(replacement, content)
     else:
-        # First time insertion: replace the entire .tour-list children
+        # First time insertion
         list_match = re.search(r'(<div class="tour-list"[^>]*>)(.*?)(</div>\s*</div>\s*</section>)', content, re.DOTALL)
         if list_match:
             open_tag = list_match.group(1)
             close_tags = list_match.group(3)
             new_block = f"{open_tag}\n          {start_marker}\n{cards_html}\n          {end_marker}\n        {close_tags}"
-            new_content = content[:list_match.start()] + new_block + content[list_match.end():]
-        else:
-            print("      [ERROR] Could not find .tour-list container in index.html!")
-            return
+            content = content[:list_match.start()] + new_block + content[list_match.end():]
 
-    # Ensure North America filter button is present in the filter bar
-    if 'data-filter="us"' not in new_content:
+    # Ensure Pagination block is present right after </div> of .tour-list
+    pag_start = "<!-- TOUR_PAGINATION_START -->"
+    pag_end = "<!-- TOUR_PAGINATION_END -->"
+    pag_block = f"{pag_start}\n{pagination_html}\n        {pag_end}"
+
+    if pag_start in content and pag_end in content:
+        pag_pattern = re.compile(rf"{re.escape(pag_start)}.*?{re.escape(pag_end)}", re.DOTALL)
+        content = pag_pattern.sub(pag_block, content)
+    else:
+        # Insert after </div> of tour-list
+        tour_list_close = '</div>\n\n      </div>\n    </section>'
+        if tour_list_close in content:
+            replacement = f'</div>\n\n        {pag_block}\n\n      </div>\n    </section>'
+            content = content.replace(tour_list_close, replacement, 1)
+        else:
+            # Fallback regex search
+            m = re.search(r'(<!-- TOUR_DATES_END -->\s*</div>)', content)
+            if m:
+                content = content[:m.end()] + f"\n\n        {pag_block}" + content[m.end():]
+
+    # Ensure North America filter button is present
+    if 'data-filter="us"' not in content:
         filter_target = '<button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>'
         filter_replacement = (
             '<button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>\n'
             '          <button class="filter-pill" role="tab" aria-selected="false" data-filter="us">North America</button>'
         )
-        new_content = new_content.replace(filter_target, filter_replacement)
+        content = content.replace(filter_target, filter_replacement)
 
     with open(index_path, "w", encoding="utf-8") as f:
-        f.write(new_content)
+        f.write(content)
 
-    print("      index.html updated successfully with live calendar events!")
+    print("      index.html updated successfully with pagination & empty state support!")
 
 if __name__ == "__main__":
     main()

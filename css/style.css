@@ -260,11 +260,15 @@ ul, ol {
 #tour .tour-weekday,
 #tour .tour-city,
 #tour .filter-pill,
+#tour .tour-empty-title,
+#tour .tour-page-btn,
+#tour .tour-page-num,
 #tour .btn {
   font-family: var(--font-section-tour-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
 }
 
 #tour .section-subtitle,
+#tour .tour-empty-subtitle,
 #tour .tour-country,
 #tour .tour-artist-name,
 #tour .tour-venue,
@@ -1265,6 +1269,128 @@ ul, ol {
   .tour-card .btn {
     width: auto;
     min-width: 140px;
+  }
+}
+
+/* ==========================================================================
+   Tour Empty State & Pagination (Max 8 Shows per Page)
+   ========================================================================== */
+
+.tour-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(2.5rem, 5vw, 4rem) 1.5rem;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-medium);
+  border-radius: 14px;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.tour-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--accent-blue, #0066b2);
+  margin-bottom: 1.25rem;
+}
+
+.tour-empty-title {
+  font-family: var(--font-section-tour-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  color: var(--accent-white, #ffffff);
+  margin: 0 0 0.5rem;
+}
+
+.tour-empty-subtitle {
+  font-family: var(--font-section-tour-body, 'Just Another Hand', cursive, sans-serif) !important;
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  color: var(--text-secondary, #a1a1aa);
+  max-width: 540px;
+  margin: 0 0 1.5rem;
+  line-height: 1.35;
+}
+
+.tour-empty-btn {
+  margin-top: 0.5rem;
+}
+
+/* Tour Pagination Controls */
+.tour-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 2rem;
+  padding-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tour-page-btn,
+.tour-page-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-family: var(--font-section-tour-display, 'Dear Joe', 'dearJoe', cursive, sans-serif) !important;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s ease);
+  gap: 0.4rem;
+}
+
+.tour-page-btn:hover:not(:disabled),
+.tour-page-num:hover:not(.active) {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-medium);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.tour-page-num.active {
+  background: var(--accent-white, #ffffff);
+  color: #070707 !important;
+  border-color: var(--accent-white, #ffffff);
+  font-weight: 700;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+}
+
+.tour-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.tour-page-btn:focus-visible,
+.tour-page-num:focus-visible {
+  outline: 2px solid var(--accent-white, #ffffff);
+  outline-offset: 3px;
+}
+
+.tour-page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-page-btn:hover:not(:disabled),
+  .tour-page-num:hover:not(.active) {
+    transform: none;
   }
 }
 
