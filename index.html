@@ -249,13 +249,42 @@
         <!-- Category Filter Pills (ARIA Tablist pattern) -->
         <div class="tour-filter-bar" role="tablist" aria-label="Tour category filter">
           <button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>
+          <button class="filter-pill" role="tab" aria-selected="false" data-filter="us">North America</button>
           <button class="filter-pill" role="tab" aria-selected="false" data-filter="europe">UK &amp; Europe</button>
         </div>
 
         <!-- Tour Date Schedule List -->
         <div class="tour-list" role="region" aria-label="Upcoming Tour Dates">
-          
-          <!-- Show 1: Amsterdam Paradiso -->
+          <!-- TOUR_DATES_START -->
+          <!-- Show 1: New York City Private Venue -->
+          <article class="tour-card" data-category="us">
+            <div class="tour-date-col">
+              <span class="tour-month">NOV</span>
+              <span class="tour-day">21</span>
+              <span class="tour-weekday">SAT</span>
+            </div>
+            
+            <div class="tour-location-col">
+              <span class="tour-city">New York City</span>
+              <span class="tour-country">USA</span>
+            </div>
+
+            <div class="tour-venue-col">
+              <span class="tour-artist-name">Element Music</span>
+              <span class="tour-venue">Private Venue</span>
+              <span class="tour-details-tag">
+                Private Performance • Inquire for Bookings
+              </span>
+            </div>
+
+            <div class="tour-action-col">
+              <a href="#contact" class="btn btn-primary" aria-label="Inquire about NOV 21 Private Event in New York City">
+                Private Event
+              </a>
+            </div>
+          </article>
+
+          <!-- Show 2: Amsterdam Paradiso (Main Hall) -->
           <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
               <span class="tour-month">NOV</span>
@@ -277,13 +306,13 @@
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Nov 28 at Paradiso Amsterdam">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for NOV 28 at Paradiso (Main Hall) Amsterdam">
                 Tickets
               </a>
             </div>
           </article>
 
-          <!-- Show 2: Amsterdam Melkweg -->
+          <!-- Show 3: Amsterdam Melkweg (The Max) -->
           <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
               <span class="tour-month">NOV</span>
@@ -305,13 +334,13 @@
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Nov 29 at Melkweg Amsterdam">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for NOV 29 at Melkweg (The Max) Amsterdam">
                 Tickets
               </a>
             </div>
           </article>
 
-          <!-- Show 3: Berlin Metropol -->
+          <!-- Show 4: Berlin Metropol -->
           <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
               <span class="tour-month">NOV</span>
@@ -333,13 +362,13 @@
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Nov 30 at Metropol Berlin">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for NOV 30 at Metropol Berlin">
                 Tickets
               </a>
             </div>
           </article>
 
-          <!-- Show 4: Paris Salle Pleyel -->
+          <!-- Show 5: Paris Salle Pleyel -->
           <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
               <span class="tour-month">DEC</span>
@@ -361,18 +390,18 @@
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 02 at Salle Pleyel Paris">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 02 at Salle Pleyel Paris">
                 Tickets
               </a>
             </div>
           </article>
 
-          <!-- Show 5: Brussels Ancienne Belgique -->
+          <!-- Show 6: Brussels Ancienne Belgique -->
           <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
               <span class="tour-month">DEC</span>
-              <span class="tour-day">03</span>
-              <span class="tour-weekday">THU</span>
+              <span class="tour-day">04</span>
+              <span class="tour-weekday">FRI</span>
             </div>
             
             <div class="tour-location-col">
@@ -382,53 +411,53 @@
 
             <div class="tour-venue-col">
               <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Ancienne Belgique (AB)</span>
+              <span class="tour-venue">Ancienne Belgique</span>
               <span class="tour-details-tag">
-                Main Hall Headline Set
+                Sounds for Someone Tour
               </span>
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 03 at Ancienne Belgique Brussels">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 04 at Ancienne Belgique Brussels">
                 Tickets
               </a>
             </div>
           </article>
 
-          <!-- Show 6: Bristol O2 Academy -->
-          <article class="tour-card" data-category="europe">
-            <div class="tour-date-col">
-              <span class="tour-month">DEC</span>
-              <span class="tour-day">05</span>
-              <span class="tour-weekday">SAT</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Bristol</span>
-              <span class="tour-country">United Kingdom</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">O2 Academy Bristol</span>
-              <span class="tour-details-tag">
-                Sounds for Someone UK Tour
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 05 at O2 Academy Bristol">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 7: Manchester Albert Hall -->
+          <!-- Show 7: London Roundhouse (Camden) -->
           <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
               <span class="tour-month">DEC</span>
               <span class="tour-day">06</span>
               <span class="tour-weekday">SUN</span>
+            </div>
+            
+            <div class="tour-location-col">
+              <span class="tour-city">London</span>
+              <span class="tour-country">United Kingdom</span>
+            </div>
+
+            <div class="tour-venue-col">
+              <span class="tour-artist-name">Elmiene</span>
+              <span class="tour-venue">Roundhouse (Camden)</span>
+              <span class="tour-details-tag">
+                Sounds for Someone UK Tour • Sold Out
+              </span>
+            </div>
+
+            <div class="tour-action-col">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 06 at Roundhouse (Camden) London">
+                Tickets
+              </a>
+            </div>
+          </article>
+
+          <!-- Show 8: Manchester Albert Hall -->
+          <article class="tour-card" data-category="europe">
+            <div class="tour-date-col">
+              <span class="tour-month">DEC</span>
+              <span class="tour-day">08</span>
+              <span class="tour-weekday">TUE</span>
             </div>
             
             <div class="tour-location-col">
@@ -445,18 +474,18 @@
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 06 at Albert Hall Manchester">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 08 at Albert Hall Manchester">
                 Tickets
               </a>
             </div>
           </article>
 
-          <!-- Show 8: London Eventim Apollo -->
+          <!-- Show 9: London Eventim Apollo (Hammersmith) -->
           <article class="tour-card" data-category="europe">
             <div class="tour-date-col">
               <span class="tour-month">DEC</span>
-              <span class="tour-day">08</span>
-              <span class="tour-weekday">TUE</span>
+              <span class="tour-day">10</span>
+              <span class="tour-weekday">THU</span>
             </div>
             
             <div class="tour-location-col">
@@ -473,12 +502,12 @@
             </div>
 
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for Dec 08 at Eventim Apollo London">
+              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 10 at Eventim Apollo (Hammersmith) London">
                 Tickets
               </a>
             </div>
           </article>
-
+          <!-- TOUR_DATES_END -->
         </div>
 
       </div>
