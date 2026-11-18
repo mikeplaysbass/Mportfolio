@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeaderScroll();
   initAlbumCards();
   initPhotoCarousel();
+  initSoundCloudPlayer();
 });
 
 /**
@@ -643,5 +644,144 @@ function initPhotoCarousel() {
 
   // Initial layout calculation
   update3DCarousel();
+}
+
+/**
+ * 8. SoundCloud Audio Track Player (Search-Result Track Style)
+ */
+function initSoundCloudPlayer() {
+  const playBtn = document.getElementById('sc-play-toggle-btn');
+  const playIcon = document.getElementById('sc-play-icon');
+  const pauseIcon = document.getElementById('sc-pause-icon');
+  const barsContainer = document.getElementById('sc-waveform-bars');
+  const playhead = document.getElementById('sc-playhead');
+  const waveformWrap = document.getElementById('sc-waveform');
+  const currentTimeEl = document.getElementById('sc-current-time');
+  const totalTimeEl = document.getElementById('sc-total-time');
+  const widgetIframe = document.getElementById('sc-hidden-widget');
+
+  if (!playBtn || !barsContainer) return;
+
+  // Waveform Bar Heights Generation (SoundCloud audio peak profile)
+  const barHeights = [
+    20, 28, 38, 52, 68, 48, 35, 55, 75, 92, 80, 62, 45, 65, 82,
+    95, 88, 70, 54, 40, 58, 78, 92, 85, 68, 50, 42, 60, 78, 90,
+    82, 65, 48, 36, 52, 70, 84, 75, 60, 46, 34, 45, 30, 20, 14
+  ];
+
+  const barElements = [];
+  barsContainer.innerHTML = '';
+  barHeights.forEach((h) => {
+    const bar = document.createElement('span');
+    bar.className = 'sc-bar';
+    bar.style.height = `${h}%`;
+    barsContainer.appendChild(bar);
+    barElements.push(bar);
+  });
+
+  function formatTime(seconds) {
+    const s = Math.floor(seconds || 0);
+    const m = Math.floor(s / 60);
+    const rem = s % 60;
+    return `${m}:${String(rem).padStart(2, '0')}`;
+  }
+
+  let durationSec = 319.11; // 5:19 default track duration
+  let isPlaying = false;
+  let widget = null;
+
+  function updateProgress(fraction, currentSec) {
+    const clamped = Math.max(0, Math.min(1, fraction));
+    if (playhead) playhead.style.left = `${clamped * 100}%`;
+    if (waveformWrap) waveformWrap.setAttribute('aria-valuenow', Math.floor(currentSec));
+    if (currentTimeEl) currentTimeEl.textContent = formatTime(currentSec);
+
+    const playedCount = Math.floor(clamped * barElements.length);
+    barElements.forEach((bar, idx) => {
+      bar.classList.toggle('played', idx < playedCount);
+    });
+  }
+
+  function setPlayState(playing) {
+    isPlaying = playing;
+    if (playIcon) playIcon.style.display = playing ? 'none' : 'block';
+    if (pauseIcon) pauseIcon.style.display = playing ? 'block' : 'none';
+    if (playBtn) playBtn.setAttribute('aria-label', playing ? 'Pause Naïka Richard - Papa Gede' : 'Play Naïka Richard - Papa Gede');
+  }
+
+  // Initialize SoundCloud Widget API if available
+  if (typeof SC !== 'undefined' && widgetIframe) {
+    try {
+      widget = SC.Widget(widgetIframe);
+
+      widget.bind(SC.Widget.Events.READY, () => {
+        widget.getDuration((ms) => {
+          if (ms > 0) {
+            durationSec = ms / 1000;
+            if (totalTimeEl) totalTimeEl.textContent = formatTime(durationSec);
+            if (waveformWrap) waveformWrap.setAttribute('aria-valuemax', Math.floor(durationSec));
+          }
+        });
+      });
+
+      widget.bind(SC.Widget.Events.PLAY, () => setPlayState(true));
+      widget.bind(SC.Widget.Events.PAUSE, () => setPlayState(false));
+      widget.bind(SC.Widget.Events.FINISH, () => {
+        setPlayState(false);
+        updateProgress(0, 0);
+      });
+
+      widget.bind(SC.Widget.Events.PLAY_PROGRESS, (data) => {
+        const currentSec = (data.currentPosition || 0) / 1000;
+        const frac = data.relativePosition != null ? data.relativePosition : (currentSec / durationSec);
+        updateProgress(frac, currentSec);
+      });
+    } catch (e) {
+      console.warn('SoundCloud Widget error:', e);
+    }
+  }
+
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      if (widget) {
+        widget.toggle();
+      } else {
+        setPlayState(!isPlaying);
+      }
+    });
+  }
+
+  function seekByFraction(frac) {
+    const targetSec = durationSec * frac;
+    updateProgress(frac, targetSec);
+    if (widget) {
+      widget.seekTo(targetSec * 1000);
+      if (!isPlaying) widget.play();
+    }
+  }
+
+  if (waveformWrap) {
+    waveformWrap.addEventListener('click', (e) => {
+      const rect = waveformWrap.getBoundingClientRect();
+      const frac = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      seekByFraction(frac);
+    });
+
+    waveformWrap.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const currentSec = parseFloat(waveformWrap.getAttribute('aria-valuenow')) || 0;
+        seekByFraction(Math.max(0, (currentSec - 5) / durationSec));
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const currentSec = parseFloat(waveformWrap.getAttribute('aria-valuenow')) || 0;
+        seekByFraction(Math.min(1, (currentSec + 5) / durationSec));
+      } else if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        if (widget) widget.toggle();
+        else setPlayState(!isPlaying);
+      }
+    });
+  }
 }
 
