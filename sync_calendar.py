@@ -4,20 +4,16 @@ sync_calendar.py
 Fetches Michael Decena's public Google Calendar feed, parses upcoming tour dates,
 and updates assets/tour-dates.json and index.html according to strict user specifications:
 
-Format:
-Event Title:
-New York City
-(or: Amsterdam, Netherlands)
-
-Description:
-Country: 
+Format in Description:
+City: New York City
+Country: USA
 Artist: 
 Venue: 
 Tour Name
 Tickets: Y
 Link: https://link-to-tickets.com
 Optional link: https://elementmusic.com
-Venue Location, add this below country 
+Venue Location: [Specific address / neighborhood / area] (rendered below country)
 Region: North America
 
 If region is populated, create a tab for it; otherwise if it's already there, group it with the others.
@@ -79,6 +75,8 @@ def parse_description(desc_raw):
     lines = [l.strip() for l in desc.splitlines() if l.strip()]
     
     data = {
+        "city": "",
+        "city_set": False,
         "country": "",
         "country_set": False,
         "artist": "",
@@ -92,6 +90,13 @@ def parse_description(desc_raw):
     }
     
     for line in lines:
+        # 0. City (parsed directly from description)
+        m = re.match(r"^city\s*[-:]\s*(.*)$", line, re.IGNORECASE)
+        if m:
+            data["city_set"] = True
+            data["city"] = m.group(1).strip()
+            continue
+
         # 1. Country
         m = re.match(r"^country\s*[-:]\s*(.*)$", line, re.IGNORECASE)
         if m:
@@ -161,40 +166,43 @@ def parse_description(desc_raw):
 
     return data
 
-def parse_title_and_location(summary_raw, loc_raw, desc_country, desc_country_set):
+def resolve_city_and_country(summary_raw, loc_raw, desc_data):
     """
     User rule:
-    Event Title:
-      New York City
-      (or: Amsterdam, Netherlands)
-    Description:
-      Country: ...
-      Venue Location: ...
-      If any are left blank just leave their section empty.
+    Rather than taking city from title, take it from Description:
+      City: <city>
+      Country: <country>
+    If any are left blank just leave their section empty.
+    Fallback to Event Title / Location if City/Country are not specified in Description.
     """
     summary = summary_raw.replace("\\,", ",").replace("\\n", " ").strip()
     loc = loc_raw.replace("\\,", ",").replace("\\n", " ").strip()
     
-    city = ""
-    country = ""
-    
-    # Check if summary is a generic placeholder (e.g. from existing test events in calendar)
-    is_placeholder = summary.lower().startswith("private") or summary.lower() in ["performance", "show", "tour date"]
-    target_text = loc if (is_placeholder and loc) else summary
-    
-    if "," in target_text:
-        parts = [p.strip() for p in target_text.split(",") if p.strip()]
-        city = parts[0]
-        # Title fallback country only if Country was not explicitly set in description
-        if not desc_country_set and len(parts) > 1:
-            country = ", ".join(parts[1:])
+    # 1. City resolution (prefer explicit City: from description)
+    if desc_data.get("city_set"):
+        city = desc_data.get("city", "").strip()
     else:
-        city = target_text
-        
-    # If Country was explicitly specified in description, that takes precedence
-    if desc_country_set:
-        country = desc_country
-        
+        # Fallback for legacy events without City: in description
+        is_placeholder = summary.lower().startswith("private") or summary.lower() in ["performance", "show", "tour date"]
+        target_text = loc if (is_placeholder and loc) else summary
+        if "," in target_text:
+            city = target_text.split(",")[0].strip()
+        else:
+            city = target_text
+
+    # 2. Country resolution (prefer explicit Country: from description)
+    if desc_data.get("country_set"):
+        country = desc_data.get("country", "").strip()
+    else:
+        # Fallback for legacy events without Country: in description
+        is_placeholder = summary.lower().startswith("private") or summary.lower() in ["performance", "show", "tour date"]
+        target_text = loc if (is_placeholder and loc) else summary
+        if "," in target_text:
+            parts = [p.strip() for p in target_text.split(",") if p.strip()]
+            country = ", ".join(parts[1:]) if len(parts) > 1 else ""
+        else:
+            country = ""
+            
     return city, country
 
 def fetch_google_calendar_events():
@@ -228,12 +236,7 @@ def fetch_google_calendar_events():
         desc_raw = desc_m.group(1).strip() if desc_m else ""
         desc_data = parse_description(desc_raw)
         
-        city, country = parse_title_and_location(
-            summary_raw, 
-            loc_raw, 
-            desc_data["country"], 
-            desc_data["country_set"]
-        )
+        city, country = resolve_city_and_country(summary_raw, loc_raw, desc_data)
         
         # Artist: if left blank, leave empty
         artist = desc_data["artist"]
