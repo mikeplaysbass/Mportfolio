@@ -7,6 +7,14 @@
   <meta name="theme-color" content="#070707">
   
   <title>Michael Decena | Official Website &amp; Portfolio</title>
+  <link rel="canonical" href="https://mikeplaysbass.com/">
+
+  <!-- Redirect any direct visits to github.io to the custom domain -->
+  <script>
+    if (window.location.hostname.endsWith('github.io')) {
+      window.location.replace('https://mikeplaysbass.com' + window.location.pathname.replace(/^\/[^/]+/, '') + window.location.search + window.location.hash);
+    }
+  </script>
   
   <!-- Browser Tab Favicon (Transparent mikeart.png) -->
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=20261119f">
