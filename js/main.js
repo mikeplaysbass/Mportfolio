@@ -299,6 +299,14 @@ function initTourFilters() {
     let scrollStart = 0;
     let dragged = false;
 
+    // Desktop mousewheel horizontal scrolling support
+    filterBar.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        filterBar.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, { passive: false });
+
     filterBar.addEventListener('mousedown', (e) => {
       isDown = true;
       dragged = false;
