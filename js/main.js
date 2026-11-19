@@ -612,6 +612,7 @@ function initForms() {
 
       // 1. Anti-Bot Speed Gate (bots submit under 2.5 seconds)
       if (Date.now() - formLoadTime < 2500) {
+        console.warn('[Inquiry Form] Bot speed trap triggered: Form submitted in under 2.5s.');
         showToast('Please take a moment before submitting.', true);
         return;
       }
@@ -620,6 +621,7 @@ function initForms() {
       const lastSent = localStorage.getItem('md_last_inquiry');
       if (lastSent && Date.now() - parseInt(lastSent, 10) < COOLDOWN_MS) {
         const remainingSec = Math.ceil((COOLDOWN_MS - (Date.now() - parseInt(lastSent, 10))) / 1000);
+        console.warn(`[Inquiry Form] Cooldown active (${remainingSec}s remaining). LocalStorage key: "md_last_inquiry" = ${lastSent}`);
         showToast(`Inquiry already sent! Please wait ${remainingSec}s before sending another.`, true);
         return;
       }
@@ -656,6 +658,7 @@ function initForms() {
         if (response.status === 200 && data.success) {
           // Record successful submission timestamp for cooldown
           localStorage.setItem('md_last_inquiry', String(Date.now()));
+          console.log('[Inquiry Form] Success! Cooldown timestamp saved to localStorage (key: "md_last_inquiry"):', localStorage.getItem('md_last_inquiry'));
           showToast('Thank you! Your inquiry has been sent to Michael.');
           contactForm.reset();
         } else {
