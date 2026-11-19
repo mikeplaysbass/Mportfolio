@@ -578,12 +578,14 @@ function initMediaModal() {
 }
 
 /**
- * 4. Interactive Forms & Toast Notifications (Web3Forms API)
+ * 4. Interactive Forms & Toast Notifications (Web3Forms API + Anti-Bot Rate Limiting)
  */
 function initForms() {
   const contactForm = document.getElementById('contact-form');
   const toast = document.getElementById('toast-notification');
   let toastTimeout = null;
+  const formLoadTime = Date.now();
+  const COOLDOWN_MS = 3 * 60 * 1000; // 3-minute cooldown between inquiries
 
   function showToast(message, isError = false) {
     if (!toast) return;
@@ -607,6 +609,20 @@ function initForms() {
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // 1. Anti-Bot Speed Gate (bots submit under 2.5 seconds)
+      if (Date.now() - formLoadTime < 2500) {
+        showToast('Please take a moment before submitting.', true);
+        return;
+      }
+
+      // 2. Client-Side Cooldown Protection (prevents rapid repeat spamming)
+      const lastSent = localStorage.getItem('md_last_inquiry');
+      if (lastSent && Date.now() - parseInt(lastSent, 10) < COOLDOWN_MS) {
+        const remainingSec = Math.ceil((COOLDOWN_MS - (Date.now() - parseInt(lastSent, 10))) / 1000);
+        showToast(`Inquiry already sent! Please wait ${remainingSec}s before sending another.`, true);
+        return;
+      }
 
       if (!contactForm.checkValidity()) {
         contactForm.reportValidity();
@@ -638,6 +654,8 @@ function initForms() {
         const data = await response.json();
 
         if (response.status === 200 && data.success) {
+          // Record successful submission timestamp for cooldown
+          localStorage.setItem('md_last_inquiry', String(Date.now()));
           showToast('Thank you! Your inquiry has been sent to Michael.');
           contactForm.reset();
         } else {
