@@ -105,8 +105,7 @@
           width="1920" 
           height="1080"
         >
-          <source src="assets/mac_recap.mp4" type="video/mp4">
-          <source src="assets/Mac_recap.mp4" type="video/mp4">
+          <source src="assets/hero_compressed.mp4?v=20261119g" type="video/mp4">
           <img 
             src="assets/hero.svg" 
             alt="" 
@@ -1434,7 +1433,14 @@
             <h3 style="font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">Direct Inquiry Form</h3>
             <p style="font-family: 'Just Another Hand', cursive, sans-serif;">Please provide details regarding your event, date, location, or message.</p>
 
-            <form id="contact-form" novalidate>
+            <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+              <!-- Web3Forms API Configuration -->
+              <input type="hidden" name="access_key" value="fdef2fda-d683-435d-bc1f-52b462ef8d39">
+              <input type="hidden" name="from_name" value="Michael Decena Official Website">
+              
+              <!-- Anti-Spam Honeypot (Hidden from human visitors) -->
+              <input type="checkbox" name="botcheck" class="hidden" style="display: none !important;">
+
               <div class="form-group">
                 <label for="contact-name" class="form-label" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Full Name *</label>
                 <input 
@@ -1466,11 +1472,11 @@
               <div class="form-group">
                 <label for="contact-subject" class="form-label" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: clamp(1.2rem, 1.1rem + 0.3vw, 1.45rem);">Inquiry Subject *</label>
                 <select id="contact-subject" name="subject" class="form-input" style="font-family: 'Just Another Hand', cursive, sans-serif; font-size: 1.25rem;">
-                  <option value="concert-touring">Concert/Touring Booking</option>
-                  <option value="recording-writing">Recording/Writing Session Booking</option>
-                  <option value="lessons">Lessons</option>
-                  <option value="commissions-gig">Commissions and Local Gig Booking</option>
-                  <option value="general-inquiries">General Inquiries</option>
+                  <option value="Concert / Touring Booking">Concert / Touring Booking</option>
+                  <option value="Recording / Writing Session Booking">Recording / Writing Session Booking</option>
+                  <option value="Bass Lessons">Bass Lessons</option>
+                  <option value="Commissions &amp; Local Gig Booking">Commissions &amp; Local Gig Booking</option>
+                  <option value="General Inquiries">General Inquiries</option>
                 </select>
               </div>
 
@@ -1486,7 +1492,7 @@
                 ></textarea>
               </div>
 
-              <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">
+              <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; font-family: 'Dear Joe', 'dearJoe', cursive, sans-serif;">
                 Submit Inquiry
               </button>
             </form>
@@ -1620,6 +1626,6 @@
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
   <!-- Main JavaScript File -->
-  <script src="js/main.js?v=20261119e"></script>
+  <script src="js/main.js?v=20261119i"></script>
 </body>
 </html>

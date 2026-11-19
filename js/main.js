@@ -144,6 +144,39 @@ function initTourFilters() {
   const tourList = document.querySelector('.tour-list');
   const filterBar = document.querySelector('.tour-filter-bar');
 
+  // 0. Delete past tour dates (where current date > tour date)
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const initialCards = document.querySelectorAll('.tour-card');
+  initialCards.forEach(card => {
+    const rawDate = card.getAttribute('data-date');
+    if (!rawDate) return;
+    const tourDate = new Date(rawDate);
+    const tourDay = new Date(tourDate.getFullYear(), tourDate.getMonth(), tourDate.getDate());
+
+    // If current date > tour date, delete the tour date card
+    if (today.getTime() > tourDay.getTime()) {
+      card.remove();
+    }
+  });
+
+  // Clean up any category filter pills that now have 0 remaining dates
+  const remainingCards = document.querySelectorAll('.tour-card');
+  const availableCategories = new Set(['all']);
+  remainingCards.forEach(card => {
+    const cat = card.getAttribute('data-category');
+    if (cat) availableCategories.add(cat);
+  });
+
+  const filterPills = document.querySelectorAll('.tour-filter-bar .filter-pill');
+  filterPills.forEach(pill => {
+    const filter = pill.getAttribute('data-filter');
+    if (filter && !availableCategories.has(filter)) {
+      pill.remove();
+    }
+  });
+
   const PAGE_SIZE = 8;
   let currentCategory = 'all';
   let currentPage = 1;
@@ -514,26 +547,80 @@ function initMediaModal() {
 }
 
 /**
- * 4. Interactive Forms & Toast Notifications
+ * 4. Interactive Forms & Toast Notifications (Web3Forms API)
  */
 function initForms() {
   const contactForm = document.getElementById('contact-form');
   const toast = document.getElementById('toast-notification');
+  let toastTimeout = null;
 
-  function showToast(message) {
+  function showToast(message, isError = false) {
     if (!toast) return;
+    if (toastTimeout) {
+      clearTimeout(toastTimeout);
+    }
     toast.textContent = message;
+    if (isError) {
+      toast.style.background = '#e53e3e';
+      toast.style.color = '#ffffff';
+    } else {
+      toast.style.background = '';
+      toast.style.color = '';
+    }
     toast.classList.add('show');
-    setTimeout(() => {
+    toastTimeout = setTimeout(() => {
       toast.classList.remove('show');
-    }, 4000);
+    }, 4500);
   }
 
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      showToast('Thank you! Your message and booking inquiry has been received.');
-      contactForm.reset();
+
+      if (!contactForm.checkValidity()) {
+        contactForm.reportValidity();
+        return;
+      }
+
+      const submitBtn = document.getElementById('contact-submit-btn') || contactForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.textContent : 'Submit Inquiry';
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending Inquiry...';
+      }
+
+      try {
+        const formData = new FormData(contactForm);
+        const object = Object.fromEntries(formData);
+        const json = JSON.stringify(object);
+
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: json
+        });
+
+        const data = await response.json();
+
+        if (response.status === 200 && data.success) {
+          showToast('Thank you! Your inquiry has been sent to Michael.');
+          contactForm.reset();
+        } else {
+          showToast(data.message || 'Something went wrong. Please try again.', true);
+        }
+      } catch (err) {
+        console.error('Contact form submission error:', err);
+        showToast('Network error. Please check your connection and try again.', true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        }
+      }
     });
   }
 }

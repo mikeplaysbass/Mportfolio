@@ -232,6 +232,8 @@ def fetch_google_calendar_events():
     raw_events = re.findall(r"BEGIN:VEVENT(.*?)END:VEVENT", unfolded, re.DOTALL)
     
     cal_events = []
+    today = datetime.now(zoneinfo.ZoneInfo(tz_name)).date()
+
     for block in raw_events:
         status_m = re.search(r"STATUS:(.+)", block)
         if status_m and status_m.group(1).strip().upper() == "CANCELLED":
@@ -244,6 +246,15 @@ def fetch_google_calendar_events():
         if not dtstart_m:
             continue
         dt = parse_ics_datetime(dtstart_m.group(1), tz_name)
+
+        # Check DTEND if available
+        dtend_m = re.search(r"DTEND(?:;[^:]+)?:(.+)", block)
+        event_end_date = parse_ics_datetime(dtend_m.group(1), tz_name).date() if dtend_m else dt.date()
+
+        # USER RULE: If current date > tour date, delete / skip the tour date
+        if today > event_end_date:
+            print(f"      [PAST EVENT] Deleted/skipped past tour date: {dt.date()} ({summary_raw})")
+            continue
         
         loc_m = re.search(r"LOCATION:(.+)", block)
         loc_raw = loc_m.group(1).strip() if loc_m else ""
