@@ -1250,7 +1250,7 @@ ul, ol {
 /* Container query responsive behavior */
 @container tour (min-width: 720px) {
   .tour-card {
-    grid-template-columns: 110px 1.4fr 1.6fr auto;
+    grid-template-columns: 110px 1.4fr 1.6fr 150px;
     gap: 1.5rem;
     padding: 1.35rem 2rem;
   }
@@ -1361,6 +1361,7 @@ ul, ol {
   font-size: clamp(1.35rem, 1.6vw, 1.6rem);
   font-weight: 600;
   color: var(--text-primary);
+  text-transform: capitalize;
 }
 
 .tour-details-tag {
@@ -1383,11 +1384,23 @@ ul, ol {
   align-items: center;
   justify-content: flex-end;
   gap: 0.75rem;
+  min-width: 0;
 }
 
-.tour-action-col:empty,
+@container tour (min-width: 720px) {
+  .tour-action-col {
+    min-width: 140px;
+  }
+}
+
 .tour-venue-col:empty {
   display: none;
+}
+
+@container tour (max-width: 719px) {
+  .tour-action-col:empty {
+    display: none;
+  }
 }
 
 .tour-card .btn {

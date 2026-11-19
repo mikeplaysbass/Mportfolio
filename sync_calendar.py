@@ -24,6 +24,7 @@ import os
 import re
 import json
 import math
+import html
 import urllib.request
 from datetime import datetime
 import zoneinfo
@@ -59,6 +60,7 @@ def parse_ics_datetime(dt_str, tz_name="America/New_York"):
 def parse_description(desc_raw):
     """
     Parses structured description lines according to user format:
+    City: <city>
     Country: <country>
     Artist: <artist>
     Venue: <venue>
@@ -70,8 +72,20 @@ def parse_description(desc_raw):
     Region: <region>
     
     If any are left blank, just leave their section empty.
+    Cleanly handles Google Calendar HTML-formatted rich text (<p>, <br>, <a>, etc.).
     """
+    # 1. ICS unescaping
     desc = desc_raw.replace("\\n", "\n").replace("\\,", ",").replace("\\;", ";")
+    # 2. Extract href from links first
+    desc = re.sub(r'<a\s+[^>]*href=["\']([^"\']+)["\'][^>]*>.*?</a>', r' \1 ', desc, flags=re.IGNORECASE)
+    # 3. Convert br and closing p/div to newlines
+    desc = re.sub(r'<\s*br\s*/?>', '\n', desc, flags=re.IGNORECASE)
+    desc = re.sub(r'<\s*/\s*(?:p|div)\s*>', '\n', desc, flags=re.IGNORECASE)
+    # 4. Strip remaining HTML tags
+    desc = re.sub(r'<[^>]+>', ' ', desc)
+    # 5. HTML unescape and replace non-breaking spaces
+    desc = html.unescape(desc).replace('\xa0', ' ')
+    
     lines = [l.strip() for l in desc.splitlines() if l.strip()]
     
     data = {
@@ -200,6 +214,8 @@ def resolve_city_and_country(summary_raw, loc_raw, desc_data):
         if "," in target_text:
             parts = [p.strip() for p in target_text.split(",") if p.strip()]
             country = ", ".join(parts[1:]) if len(parts) > 1 else ""
+        elif "new york" in target_text.lower() or "new york" in city.lower():
+            country = "USA"
         else:
             country = ""
             
@@ -243,6 +259,8 @@ def fetch_google_calendar_events():
         
         # Venue: if left blank, leave empty
         venue = desc_data["venue"]
+        if venue.lower() == "private":
+            venue = "Private"
         
         # Venue Location: if left blank, leave empty
         venue_location = desc_data["venue_location"]
