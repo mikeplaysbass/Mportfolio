@@ -29,7 +29,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&family=Permanent+Marker&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   
   <!-- Preload hero banner poster for instant LCP -->
-  <link rel="preload" href="assets/hero.svg" as="image" fetchpriority="high">
+  <link rel="preload" href="assets/hero_poster.jpg?v=20261119" as="image" fetchpriority="high">
   
   <!-- Main Stylesheet adhering to AGENTS.md directives -->
   <link rel="stylesheet" href="css/style.css?v=20261119e">
@@ -109,17 +109,18 @@
           loop 
           playsinline 
           preload="auto"
-          poster="assets/hero.svg"
+          poster="assets/hero_poster.jpg?v=20261119"
           width="1920" 
           height="1080"
         >
           <source src="assets/hero_compressed.mp4?v=20261119g" type="video/mp4">
           <img 
-            src="assets/hero.svg" 
-            alt="" 
+            src="assets/hero_poster.jpg?v=20261119" 
+            alt="Michael Decena concert stage entrance" 
             class="hero-img" 
             width="1920" 
-            height="1080"
+            height="1080" 
+            fetchpriority="high"
           >
         </video>
         <div class="hero-overlay"></div>
