@@ -135,22 +135,25 @@ function initMobileNav() {
  * 2. Tour Filter Category Switching & Pagination (Max 8 Events per Page)
  */
 function initTourFilters() {
-  const filterPills = document.querySelectorAll('.filter-pill');
-  const tourCards = document.querySelectorAll('.tour-card');
   const emptyState = document.getElementById('tour-empty-state');
   const paginationNav = document.getElementById('tour-pagination');
   const prevBtn = document.getElementById('tour-page-prev');
   const nextBtn = document.getElementById('tour-page-next');
   const pageNumbersContainer = document.getElementById('tour-page-numbers');
+  const sortSelect = document.getElementById('tour-sort-select');
+  const tourList = document.querySelector('.tour-list');
+  const filterBar = document.querySelector('.tour-filter-bar');
 
   const PAGE_SIZE = 8;
   let currentCategory = 'all';
   let currentPage = 1;
+  let currentSort = sortSelect ? sortSelect.value : 'asc';
 
   function updateDisplay(scrollOnChange = false) {
     // 1. Determine cards matching active category
+    const currentCards = document.querySelectorAll('.tour-card');
     const matchingCards = [];
-    tourCards.forEach(card => {
+    currentCards.forEach(card => {
       const cardCategory = card.getAttribute('data-category');
       if (currentCategory === 'all' || cardCategory === currentCategory) {
         matchingCards.push(card);
@@ -161,7 +164,7 @@ function initTourFilters() {
 
     // 2. Handle 0 matching events (Empty State)
     if (totalMatching === 0) {
-      tourCards.forEach(card => { card.style.display = 'none'; });
+      currentCards.forEach(card => { card.style.display = 'none'; });
       if (emptyState) emptyState.style.display = 'flex';
       if (paginationNav) paginationNav.style.display = 'none';
       return;
@@ -170,7 +173,19 @@ function initTourFilters() {
     // Hide empty state if we have matching events
     if (emptyState) emptyState.style.display = 'none';
 
-    // 3. Calculate pagination
+    // 3. Sort matching cards by date based on currentSort ('asc' vs 'desc')
+    matchingCards.sort((a, b) => {
+      const dateA = new Date(a.getAttribute('data-date') || 0).getTime();
+      const dateB = new Date(b.getAttribute('data-date') || 0).getTime();
+      return currentSort === 'desc' ? (dateB - dateA) : (dateA - dateB);
+    });
+
+    // Reorder matching cards in the DOM list
+    if (tourList) {
+      matchingCards.forEach(card => tourList.appendChild(card));
+    }
+
+    // 4. Calculate pagination
     const totalPages = Math.ceil(totalMatching / PAGE_SIZE);
     if (currentPage > totalPages) {
       currentPage = 1;
@@ -179,8 +194,8 @@ function initTourFilters() {
     const startIndex = (currentPage - 1) * PAGE_SIZE;
     const endIndex = startIndex + PAGE_SIZE;
 
-    // 4. Update card visibility
-    tourCards.forEach(card => {
+    // 5. Update card visibility
+    currentCards.forEach(card => {
       card.style.display = 'none';
     });
 
@@ -192,7 +207,7 @@ function initTourFilters() {
       }
     });
 
-    // 5. Update pagination UI (show only if > 8 items)
+    // 6. Update pagination UI (show only if > 8 items)
     if (totalPages <= 1) {
       if (paginationNav) paginationNav.style.display = 'none';
     } else {
@@ -231,7 +246,7 @@ function initTourFilters() {
       }
     }
 
-    // 6. Smooth scroll to tour heading on page change if requested
+    // 7. Smooth scroll to tour heading on page change if requested
     if (scrollOnChange) {
       const tourHeading = document.getElementById('tour-heading');
       if (tourHeading) {
@@ -240,6 +255,15 @@ function initTourFilters() {
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }
+  }
+
+  // Sort dropdown change listener
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value;
+      currentPage = 1;
+      updateDisplay(false);
+    });
   }
 
   // Previous button handler
@@ -255,7 +279,8 @@ function initTourFilters() {
   // Next button handler
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
-      const matchingCount = Array.from(tourCards).filter(c => {
+      const currentCards = document.querySelectorAll('.tour-card');
+      const matchingCount = Array.from(currentCards).filter(c => {
         const cat = c.getAttribute('data-category');
         return currentCategory === 'all' || cat === currentCategory;
       }).length;
@@ -267,23 +292,65 @@ function initTourFilters() {
     });
   }
 
-  // Filter Pill buttons
-  filterPills.forEach(pill => {
-    pill.addEventListener('click', () => {
+  // Filter Pill buttons (event delegation on container for dynamic region tabs + swipe/drag)
+  if (filterBar) {
+    let isDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+    let dragged = false;
+
+    filterBar.addEventListener('mousedown', (e) => {
+      isDown = true;
+      dragged = false;
+      startX = e.pageX - filterBar.offsetLeft;
+      scrollStart = filterBar.scrollLeft;
+      filterBar.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDown) {
+        isDown = false;
+        if (filterBar) filterBar.style.cursor = '';
+      }
+    });
+
+    filterBar.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - filterBar.offsetLeft;
+      const walk = (x - startX);
+      if (Math.abs(walk) > 5) {
+        dragged = true;
+      }
+      filterBar.scrollLeft = scrollStart - walk;
+    });
+
+    filterBar.addEventListener('click', (e) => {
+      if (dragged) {
+        dragged = false;
+        return;
+      }
+      const pill = e.target.closest('.filter-pill');
+      if (!pill) return;
+
       currentCategory = pill.getAttribute('data-filter') || 'all';
       currentPage = 1;
 
       // Update ARIA and active states
-      filterPills.forEach(p => {
+      const allPills = filterBar.querySelectorAll('.filter-pill');
+      allPills.forEach(p => {
         p.classList.remove('active');
         p.setAttribute('aria-selected', 'false');
       });
       pill.classList.add('active');
       pill.setAttribute('aria-selected', 'true');
 
+      // Scroll active pill cleanly into view when overflowing
+      pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
       updateDisplay(false);
     });
-  });
+  }
 
   // Initial setup run
   updateDisplay(false);

@@ -260,6 +260,8 @@ ul, ol {
 #tour .tour-weekday,
 #tour .tour-city,
 #tour .filter-pill,
+#tour .tour-sort-label,
+#tour .tour-sort-select,
 #tour .tour-empty-title,
 #tour .tour-page-btn,
 #tour .tour-page-num,
@@ -270,6 +272,7 @@ ul, ol {
 #tour .section-subtitle,
 #tour .tour-empty-subtitle,
 #tour .tour-country,
+#tour .tour-venue-location,
 #tour .tour-artist-name,
 #tour .tour-venue,
 #tour .tour-details-tag {
@@ -1081,13 +1084,109 @@ ul, ol {
   }
 }
 
-.tour-filter-bar {
-  display: flex;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.75rem;
+/* Tour Controls Row: Category Filter Tabs on Left + Sort Dropdown on Right */
+.tour-controls-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 1.5rem;
   margin-bottom: 2rem;
+  width: 100%;
+}
+
+.tour-filter-bar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
   scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0.35rem 0.25rem 0.5rem 0.25rem;
+  margin: 0 !important;
+  cursor: grab;
+  user-select: none;
+}
+
+.tour-filter-bar::-webkit-scrollbar {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.filter-pill {
+  flex-shrink: 0 !important;
+  scroll-snap-align: start;
+}
+
+.tour-sort-custom {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+.tour-sort-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  min-height: 52px;
+  min-width: 220px;
+  padding: 0.65rem 3.2rem 0.65rem 1.35rem;
+  border-radius: 10px;
+  background-color: #000000 !important;
+  background: #000000 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 1.2rem center / 16px 16px !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+  transition: all var(--transition-fast, 0.2s ease);
+}
+
+.tour-sort-select::-ms-expand {
+  display: none;
+}
+
+.tour-sort-select:hover {
+  background-color: #000000 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+  color: #ffffff !important;
+}
+
+.tour-sort-select:focus-visible {
+  outline: 2px solid #ffffff !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
+}
+
+.tour-sort-select option {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  padding: 0.65rem 1.2rem;
+  font-family: sans-serif;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 520px) {
+  .tour-controls-row {
+    flex-wrap: wrap !important;
+    gap: 1rem;
+  }
+  .tour-sort-custom {
+    margin-left: auto;
+  }
 }
 
 .tour-filter-bar::-webkit-scrollbar {
@@ -1214,6 +1313,12 @@ ul, ol {
   color: var(--text-secondary);
 }
 
+.tour-venue-location {
+  font-size: clamp(1.15rem, 1.3vw, 1.35rem);
+  color: var(--text-muted, #a1a1aa);
+  line-height: 1.25;
+}
+
 .tour-venue-col {
   display: flex;
   flex-direction: column;
@@ -1229,8 +1334,27 @@ ul, ol {
   color: var(--accent-blue, #0066b2);
   -webkit-text-stroke: 0.45px #ffffff;
   paint-order: stroke fill;
-
   line-height: 1.2;
+}
+
+.tour-artist-name a,
+.tour-artist-link {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--transition-fast, 0.2s ease);
+}
+
+.tour-artist-name a:hover,
+.tour-artist-link:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+.tour-artist-name a:focus-visible,
+.tour-artist-link:focus-visible {
+  outline: 2px solid var(--accent-white, #ffffff);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .tour-venue {
@@ -1259,6 +1383,11 @@ ul, ol {
   align-items: center;
   justify-content: flex-end;
   gap: 0.75rem;
+}
+
+.tour-action-col:empty,
+.tour-venue-col:empty {
+  display: none;
 }
 
 .tour-card .btn {

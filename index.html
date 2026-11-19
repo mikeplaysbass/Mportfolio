@@ -17,7 +17,7 @@
   <link rel="preload" href="assets/hero.svg" as="image" fetchpriority="high">
   
   <!-- Main Stylesheet adhering to AGENTS.md directives -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261119b">
 </head>
 <body>
 
@@ -246,11 +246,28 @@
           </p>
         </header>
 
-        <!-- Category Filter Pills (ARIA Tablist pattern) -->
-        <div class="tour-filter-bar" role="tablist" aria-label="Tour category filter">
-          <button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>
-          <button class="filter-pill" role="tab" aria-selected="false" data-filter="us">North America</button>
-          <button class="filter-pill" role="tab" aria-selected="false" data-filter="europe">UK &amp; Europe</button>
+        <!-- Tour Controls Row (Category Filter Tabs on Left + Sort Dropdown on Right) -->
+        <div class="tour-controls-row" style="display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; flex-wrap: nowrap !important; width: 100% !important; gap: 1.5rem !important; margin-bottom: 2rem !important;">
+          <!-- Category Filter Pills (ARIA Tablist pattern) -->
+          <!-- TOUR_FILTERS_START -->
+          <!-- Category Filter Pills (ARIA Tablist pattern) -->
+          <div class="tour-filter-bar" role="tablist" aria-label="Tour category filter" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; flex: 1 1 auto !important; min-width: 0 !important; overflow-x: auto !important; overflow-y: hidden !important; white-space: nowrap !important; flex-wrap: nowrap !important; margin: 0 !important;">
+            <button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>
+          </div>
+          <!-- TOUR_FILTERS_END -->
+
+          <!-- Sort Dropdown (Right side, aligned with region tabs) -->
+          <div class="tour-sort-custom" style="position: relative !important; display: inline-flex !important; align-items: center !important; flex-shrink: 0 !important; margin-left: auto !important;">
+            <select 
+              id="tour-sort-select" 
+              class="tour-sort-select" 
+              aria-label="Sort tour dates by order"
+              style="appearance: none !important; -webkit-appearance: none !important; -moz-appearance: none !important; background-color: #000000 !important; background: #000000 url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;) no-repeat right 1.2rem center / 16px 16px !important; color: #ffffff !important; border: 2px solid #ffffff !important; border-radius: 10px !important; min-height: 52px !important; min-width: 220px !important; font-size: 1.25rem !important; padding: 0.65rem 3.2rem 0.65rem 1.35rem !important; cursor: pointer !important;"
+            >
+              <option value="asc" selected style="background-color: #000000; color: #ffffff;">Ascending Order</option>
+              <option value="desc" style="background-color: #000000; color: #ffffff;">Descending Order</option>
+            </select>
+          </div>
         </div>
 
         <!-- Tour Date Schedule List -->
@@ -273,238 +290,33 @@
             </a>
           </div>
 
-          <!-- Show 1: New York City Private Venue -->
-          <article class="tour-card" data-category="us" data-tour-index="0">
+          <!-- Show 1: New York City -->
+          <article class="tour-card" data-category="all" data-date="2026-11-21T20:00:00-05:00" data-tour-index="0">
             <div class="tour-date-col">
               <span class="tour-month">NOV</span>
               <span class="tour-day">21</span>
               <span class="tour-weekday">SAT</span>
             </div>
-            
             <div class="tour-location-col">
               <span class="tour-city">New York City</span>
-              <span class="tour-country">USA</span>
             </div>
 
             <div class="tour-venue-col">
               <span class="tour-artist-name">Element Music</span>
-              <span class="tour-venue">Private Venue</span>
-              <span class="tour-details-tag">
-                Private Performance • Inquire for Bookings
-              </span>
+              <span class="tour-venue">private</span>
             </div>
-
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Inquire about NOV 21 Private Event in New York City">
-                Private Event
-              </a>
+              <!-- Private / un-ticketed event: no button -->
             </div>
           </article>
 
-          <!-- Show 2: Amsterdam Paradiso (Main Hall) -->
-          <article class="tour-card" data-category="europe" data-tour-index="1">
-            <div class="tour-date-col">
-              <span class="tour-month">NOV</span>
-              <span class="tour-day">28</span>
-              <span class="tour-weekday">SAT</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Amsterdam</span>
-              <span class="tour-country">Netherlands</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Paradiso (Main Hall)</span>
-              <span class="tour-details-tag">
-                Sounds for Someone Tour • Extra Date Added
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for NOV 28 at Paradiso (Main Hall) Amsterdam">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 3: Amsterdam Melkweg (The Max) -->
-          <article class="tour-card" data-category="europe" data-tour-index="2">
-            <div class="tour-date-col">
-              <span class="tour-month">NOV</span>
-              <span class="tour-day">29</span>
-              <span class="tour-weekday">SUN</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Amsterdam</span>
-              <span class="tour-country">Netherlands</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Melkweg (The Max)</span>
-              <span class="tour-details-tag">
-                Sounds for Someone Tour
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for NOV 29 at Melkweg (The Max) Amsterdam">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 4: Berlin Metropol -->
-          <article class="tour-card" data-category="europe" data-tour-index="3">
-            <div class="tour-date-col">
-              <span class="tour-month">NOV</span>
-              <span class="tour-day">30</span>
-              <span class="tour-weekday">MON</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Berlin</span>
-              <span class="tour-country">Germany</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Metropol</span>
-              <span class="tour-details-tag">
-                Sounds for Someone Tour
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for NOV 30 at Metropol Berlin">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 5: Paris Salle Pleyel -->
-          <article class="tour-card" data-category="europe" data-tour-index="4">
-            <div class="tour-date-col">
-              <span class="tour-month">DEC</span>
-              <span class="tour-day">02</span>
-              <span class="tour-weekday">WED</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Paris</span>
-              <span class="tour-country">France</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Salle Pleyel</span>
-              <span class="tour-details-tag">
-                Sounds for Someone Tour • Low Tickets
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 02 at Salle Pleyel Paris">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 6: Brussels Ancienne Belgique -->
-          <article class="tour-card" data-category="europe" data-tour-index="5">
-            <div class="tour-date-col">
-              <span class="tour-month">DEC</span>
-              <span class="tour-day">04</span>
-              <span class="tour-weekday">FRI</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Brussels</span>
-              <span class="tour-country">Belgium</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Ancienne Belgique</span>
-              <span class="tour-details-tag">
-                Sounds for Someone Tour
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 04 at Ancienne Belgique Brussels">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 7: London Roundhouse (Camden) -->
-          <article class="tour-card" data-category="europe" data-tour-index="6">
-            <div class="tour-date-col">
-              <span class="tour-month">DEC</span>
-              <span class="tour-day">06</span>
-              <span class="tour-weekday">SUN</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">London</span>
-              <span class="tour-country">United Kingdom</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Roundhouse (Camden)</span>
-              <span class="tour-details-tag">
-                Sounds for Someone UK Tour • Sold Out
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 06 at Roundhouse (Camden) London">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 8: Manchester Albert Hall -->
-          <article class="tour-card" data-category="europe" data-tour-index="7">
-            <div class="tour-date-col">
-              <span class="tour-month">DEC</span>
-              <span class="tour-day">08</span>
-              <span class="tour-weekday">TUE</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">Manchester</span>
-              <span class="tour-country">United Kingdom</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Albert Hall</span>
-              <span class="tour-details-tag">
-                Sounds for Someone UK Tour
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 08 at Albert Hall Manchester">
-                Tickets
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 9: New York Private Venue -->
-          <article class="tour-card" data-category="us" data-tour-index="8" style="display: none;">
+          <!-- Show 2: New York -->
+          <article class="tour-card" data-category="all" data-date="2026-12-10T00:00:00-05:00" data-tour-index="1">
             <div class="tour-date-col">
               <span class="tour-month">DEC</span>
               <span class="tour-day">10</span>
               <span class="tour-weekday">THU</span>
             </div>
-            
             <div class="tour-location-col">
               <span class="tour-city">New York</span>
               <span class="tour-country">NY, USA</span>
@@ -512,44 +324,10 @@
 
             <div class="tour-venue-col">
               <span class="tour-artist-name">Private</span>
-              <span class="tour-venue">Private Venue</span>
-              <span class="tour-details-tag">
-                Private Performance • Inquire for Bookings
-              </span>
+              <span class="tour-venue">Private</span>
             </div>
-
             <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Inquire about DEC 10 Private Event in New York">
-                Private Event
-              </a>
-            </div>
-          </article>
-
-          <!-- Show 10: London Eventim Apollo (Hammersmith) -->
-          <article class="tour-card" data-category="europe" data-tour-index="9" style="display: none;">
-            <div class="tour-date-col">
-              <span class="tour-month">DEC</span>
-              <span class="tour-day">10</span>
-              <span class="tour-weekday">THU</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">London</span>
-              <span class="tour-country">United Kingdom</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">Elmiene</span>
-              <span class="tour-venue">Eventim Apollo (Hammersmith)</span>
-              <span class="tour-details-tag">
-                Sounds for Someone UK Tour
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="#contact" class="btn btn-primary" aria-label="Get tickets for DEC 10 at Eventim Apollo (Hammersmith) London">
-                Tickets
-              </a>
+              <!-- Private / un-ticketed event: no button -->
             </div>
           </article>
           <!-- TOUR_DATES_END -->
@@ -557,7 +335,7 @@
 
         <!-- TOUR_PAGINATION_START -->
         <!-- Tour Pagination Controls (Max 8 Shows per Page) -->
-        <nav id="tour-pagination" class="tour-pagination" aria-label="Tour dates pagination" style="display: flex;">
+        <nav id="tour-pagination" class="tour-pagination" aria-label="Tour dates pagination" style="display: none;">
           <button id="tour-page-prev" class="tour-page-btn tour-page-prev" type="button" aria-label="Previous page of tour dates" disabled>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"></polyline>
@@ -567,7 +345,6 @@
           
           <div id="tour-page-numbers" class="tour-page-numbers" role="navigation" aria-label="Page numbers">
             <button class="tour-page-num active" type="button" aria-label="Page 1" aria-current="page">1</button>
-            <button class="tour-page-num" type="button" aria-label="Page 2">2</button>
           </div>
 
           <button id="tour-page-next" class="tour-page-btn tour-page-next" type="button" aria-label="Next page of tour dates">

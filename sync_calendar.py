@@ -2,10 +2,26 @@
 """
 sync_calendar.py
 Fetches Michael Decena's public Google Calendar feed, parses upcoming tour dates,
-and updates assets/tour-dates.json and index.html with:
-- Max 8 events per page
-- Interactive pagination (if > 8 events)
-- "No upcoming performances" empty state (if 0 events)
+and updates assets/tour-dates.json and index.html according to strict user specifications:
+
+Format:
+Event Title:
+New York City
+(or: Amsterdam, Netherlands)
+
+Description:
+Country: 
+Artist: 
+Venue: 
+Tour Name
+Tickets: Y
+Link: https://link-to-tickets.com
+Optional link: https://elementmusic.com
+Venue Location, add this below country 
+Region: North America
+
+If region is populated, create a tab for it; otherwise if it's already there, group it with the others.
+If any are left blank, just leave their section empty.
 """
 
 import os
@@ -24,153 +40,11 @@ CALENDAR_ICS_URL = (
 
 PAGE_SIZE = 8
 
-# Base default European tour shows (Sounds for Someone Tour)
-BASE_EUROPE_SHOWS = [
-    {
-        "isoDate": "2026-11-28T20:00:00+01:00",
-        "month": "NOV",
-        "day": "28",
-        "weekday": "SAT",
-        "year": "2026",
-        "summary": "Amsterdam Paradiso",
-        "city": "Amsterdam",
-        "country": "Netherlands",
-        "artist": "Elmiene",
-        "venue": "Paradiso (Main Hall)",
-        "tag": "Sounds for Someone Tour • Extra Date Added",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    },
-    {
-        "isoDate": "2026-11-29T20:00:00+01:00",
-        "month": "NOV",
-        "day": "29",
-        "weekday": "SUN",
-        "year": "2026",
-        "summary": "Amsterdam Melkweg",
-        "city": "Amsterdam",
-        "country": "Netherlands",
-        "artist": "Elmiene",
-        "venue": "Melkweg (The Max)",
-        "tag": "Sounds for Someone Tour",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    },
-    {
-        "isoDate": "2026-11-30T20:00:00+01:00",
-        "month": "NOV",
-        "day": "30",
-        "weekday": "MON",
-        "year": "2026",
-        "summary": "Berlin Metropol",
-        "city": "Berlin",
-        "country": "Germany",
-        "artist": "Elmiene",
-        "venue": "Metropol",
-        "tag": "Sounds for Someone Tour",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    },
-    {
-        "isoDate": "2026-12-02T20:00:00+01:00",
-        "month": "DEC",
-        "day": "02",
-        "weekday": "WED",
-        "year": "2026",
-        "summary": "Paris Salle Pleyel",
-        "city": "Paris",
-        "country": "France",
-        "artist": "Elmiene",
-        "venue": "Salle Pleyel",
-        "tag": "Sounds for Someone Tour • Low Tickets",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    },
-    {
-        "isoDate": "2026-12-04T20:00:00+01:00",
-        "month": "DEC",
-        "day": "04",
-        "weekday": "FRI",
-        "year": "2026",
-        "summary": "Brussels Ancienne Belgique",
-        "city": "Brussels",
-        "country": "Belgium",
-        "artist": "Elmiene",
-        "venue": "Ancienne Belgique",
-        "tag": "Sounds for Someone Tour",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    },
-    {
-        "isoDate": "2026-12-06T20:00:00+00:00",
-        "month": "DEC",
-        "day": "06",
-        "weekday": "SUN",
-        "year": "2026",
-        "summary": "London Roundhouse",
-        "city": "London",
-        "country": "United Kingdom",
-        "artist": "Elmiene",
-        "venue": "Roundhouse (Camden)",
-        "tag": "Sounds for Someone UK Tour • Sold Out",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    },
-    {
-        "isoDate": "2026-12-08T20:00:00+00:00",
-        "month": "DEC",
-        "day": "08",
-        "weekday": "TUE",
-        "year": "2026",
-        "summary": "Manchester Albert Hall",
-        "city": "Manchester",
-        "country": "United Kingdom",
-        "artist": "Elmiene",
-        "venue": "Albert Hall",
-        "tag": "Sounds for Someone UK Tour",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    },
-    {
-        "isoDate": "2026-12-10T20:00:00+00:00",
-        "month": "DEC",
-        "day": "10",
-        "weekday": "THU",
-        "year": "2026",
-        "summary": "London Eventim Apollo",
-        "city": "London",
-        "country": "United Kingdom",
-        "artist": "Elmiene",
-        "venue": "Eventim Apollo (Hammersmith)",
-        "tag": "Sounds for Someone UK Tour",
-        "category": "europe",
-        "ticketUrl": "#contact",
-        "actionLabel": "Tickets",
-        "isPrivate": False,
-        "source": "base"
-    }
-]
+def slugify(text):
+    text = text.lower().strip()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_-]+", "-", text)
+    return text.strip("-")
 
 def parse_ics_datetime(dt_str, tz_name="America/New_York"):
     dt_str = dt_str.strip()
@@ -182,51 +56,146 @@ def parse_ics_datetime(dt_str, tz_name="America/New_York"):
         naive = datetime.strptime(dt_str, "%Y%m%dT%H%M%S")
         return naive.replace(tzinfo=zoneinfo.ZoneInfo(tz_name))
     else:
+        # All-day event YYYYMMDD
         naive = datetime.strptime(dt_str, "%Y%m%d")
         return naive.replace(tzinfo=zoneinfo.ZoneInfo(tz_name))
 
 def parse_description(desc_raw):
+    """
+    Parses structured description lines according to user format:
+    Country: <country>
+    Artist: <artist>
+    Venue: <venue>
+    Tour Name: <tour_name>
+    Tickets: Y/N
+    Link: <tickets_url>
+    Optional link: <artist_url>
+    Venue Location: <venue_location>
+    Region: <region>
+    
+    If any are left blank, just leave their section empty.
+    """
     desc = desc_raw.replace("\\n", "\n").replace("\\,", ",").replace("\\;", ";")
     lines = [l.strip() for l in desc.splitlines() if l.strip()]
     
     data = {
+        "country": "",
+        "country_set": False,
         "artist": "",
         "venue": "",
-        "tickets": "",
-        "tag": ""
+        "tour_name": "",
+        "tickets_flag": None,  # True if Y, False if N, None if not set
+        "link": "",
+        "optional_link": "",
+        "venue_location": "",
+        "region": "",
     }
     
     for line in lines:
-        m = re.match(r"^(artist|performer|band)\s*[-:]\s*(.+)$", line, re.IGNORECASE)
+        # 1. Country
+        m = re.match(r"^country\s*[-:]\s*(.*)$", line, re.IGNORECASE)
         if m:
-            data["artist"] = m.group(2).strip()
+            data["country_set"] = True
+            data["country"] = m.group(1).strip()
             continue
-        m = re.match(r"^(venue|place|club)\s*[-:]\s*(.+)$", line, re.IGNORECASE)
+            
+        # 2. Artist
+        m = re.match(r"^artist\s*[-:]\s*(.*)$", line, re.IGNORECASE)
         if m:
-            data["venue"] = m.group(2).strip()
+            data["artist"] = m.group(1).strip()
             continue
-        m = re.match(r"^(tickets?|rsvp|link|ticket\s*link)\s*[-:]\s*(https?://\S+)$", line, re.IGNORECASE)
+            
+        # 3. Venue Location (Check before Venue to avoid prefix collision!)
+        m = re.match(r"^(?:venue\s*location|venue\s*address)\s*[-:]\s*(.*)$", line, re.IGNORECASE)
         if m:
-            data["tickets"] = m.group(2).strip()
+            data["venue_location"] = m.group(1).strip()
             continue
-        m = re.match(r"^(tour|tag|details?|info)\s*[-:]\s*(.+)$", line, re.IGNORECASE)
+            
+        # 4. Venue
+        m = re.match(r"^venue\s*[-:]\s*(.*)$", line, re.IGNORECASE)
         if m:
-            data["tag"] = m.group(2).strip()
+            data["venue"] = m.group(1).strip()
             continue
-        url_match = re.search(r"https?://\S+", line)
-        if url_match and not data["tickets"]:
-            data["tickets"] = url_match.group(0).strip()
+            
+        # 5. Tour Name
+        m = re.match(r"^(?:tour\s*name|tour)(?:\s*[-:]\s*(.*))?$", line, re.IGNORECASE)
+        if m:
+            captured = m.group(1)
+            data["tour_name"] = captured.strip() if captured else ""
+            continue
+            
+        # 6. Tickets flag (Y / N or y / n)
+        m = re.match(r"^tickets?\s*[-:]\s*(.*)$", line, re.IGNORECASE)
+        if m:
+            val = m.group(1).strip().upper()
+            if val in ["Y", "YES", "TRUE"]:
+                data["tickets_flag"] = True
+            elif val in ["N", "NO", "FALSE"]:
+                data["tickets_flag"] = False
+            else:
+                data["tickets_flag"] = None
+            continue
+            
+        # 7. Optional link (for hyperlinking artist name - check before Link!)
+        m = re.match(r"^(?:optional\s*link|artist\s*link|website|site)\s*[-:]\s*(https?://\S+)", line, re.IGNORECASE)
+        if m:
+            data["optional_link"] = m.group(1).strip()
+            continue
+            
+        # 8. Link (for ticket button)
+        m = re.match(r"^(?:ticket\s*link|link)\s*[-:]\s*(https?://\S+)", line, re.IGNORECASE)
+        if m:
+            data["link"] = m.group(1).strip()
+            continue
+
+        # 9. Region
+        m = re.match(r"^region\s*[-:]\s*(.*)$", line, re.IGNORECASE)
+        if m:
+            data["region"] = m.group(1).strip()
+            continue
+
+        # Fallback raw URL: if line is just a URL and no ticket link yet
+        if line.startswith("http://") or line.startswith("https://"):
+            if not data["link"]:
+                data["link"] = line.strip()
 
     return data
 
-def parse_location(loc_raw):
+def parse_title_and_location(summary_raw, loc_raw, desc_country, desc_country_set):
+    """
+    User rule:
+    Event Title:
+      New York City
+      (or: Amsterdam, Netherlands)
+    Description:
+      Country: ...
+      Venue Location: ...
+      If any are left blank just leave their section empty.
+    """
+    summary = summary_raw.replace("\\,", ",").replace("\\n", " ").strip()
     loc = loc_raw.replace("\\,", ",").replace("\\n", " ").strip()
-    parts = [p.strip() for p in loc.split(",") if p.strip()]
-    if len(parts) >= 2:
-        return parts[0], ", ".join(parts[1:])
-    elif len(parts) == 1:
-        return parts[0], "USA" if "new york" in parts[0].lower() else ""
-    return "TBA", ""
+    
+    city = ""
+    country = ""
+    
+    # Check if summary is a generic placeholder (e.g. from existing test events in calendar)
+    is_placeholder = summary.lower().startswith("private") or summary.lower() in ["performance", "show", "tour date"]
+    target_text = loc if (is_placeholder and loc) else summary
+    
+    if "," in target_text:
+        parts = [p.strip() for p in target_text.split(",") if p.strip()]
+        city = parts[0]
+        # Title fallback country only if Country was not explicitly set in description
+        if not desc_country_set and len(parts) > 1:
+            country = ", ".join(parts[1:])
+    else:
+        city = target_text
+        
+    # If Country was explicitly specified in description, that takes precedence
+    if desc_country_set:
+        country = desc_country
+        
+    return city, country
 
 def fetch_google_calendar_events():
     req = urllib.request.Request(CALENDAR_ICS_URL, headers={"User-Agent": "Mozilla/5.0"})
@@ -245,7 +214,7 @@ def fetch_google_calendar_events():
             continue
             
         summary_m = re.search(r"SUMMARY:(.+)", block)
-        summary = summary_m.group(1).strip() if summary_m else "Performance"
+        summary_raw = summary_m.group(1).strip() if summary_m else ""
         
         dtstart_m = re.search(r"DTSTART(?:;[^:]+)?:(.+)", block)
         if not dtstart_m:
@@ -254,38 +223,54 @@ def fetch_google_calendar_events():
         
         loc_m = re.search(r"LOCATION:(.+)", block)
         loc_raw = loc_m.group(1).strip() if loc_m else ""
-        city, country = parse_location(loc_raw)
         
         desc_m = re.search(r"DESCRIPTION:(.+)", block)
         desc_raw = desc_m.group(1).strip() if desc_m else ""
         desc_data = parse_description(desc_raw)
         
-        artist = desc_data["artist"] or summary
-        if "private" in summary.lower() and desc_data["artist"]:
-            artist = desc_data["artist"]
+        city, country = parse_title_and_location(
+            summary_raw, 
+            loc_raw, 
+            desc_data["country"], 
+            desc_data["country_set"]
+        )
         
-        venue = desc_data["venue"] or ("Private Venue" if "private" in summary.lower() else (city if city != "TBA" else "Live Venue"))
-        if venue.lower() == "private":
-            venue = "Private Venue"
-            
-        tag = desc_data["tag"]
-        if not tag:
-            if "private" in summary.lower() or "private" in venue.lower():
-                tag = "Private Performance • Inquire for Bookings"
-            else:
-                tag = summary if summary != artist else "Live Performance"
-                
-        full_loc = (loc_raw + " " + summary + " " + desc_raw).lower()
-        if any(c in full_loc for c in ["uk", "london", "europe", "amsterdam", "paris", "berlin", "brussels", "germany", "france", "netherlands"]):
-            category = "europe"
-        elif any(c in full_loc for c in ["new york", "nyc", "los angeles", "la", "chicago", "nashville", "usa", "us"]):
-            category = "us"
+        # Artist: if left blank, leave empty
+        artist = desc_data["artist"]
+        
+        # Venue: if left blank, leave empty
+        venue = desc_data["venue"]
+        
+        # Venue Location: if left blank, leave empty
+        venue_location = desc_data["venue_location"]
+        
+        # Tour Name: if left blank, leave empty
+        tour_name = desc_data["tour_name"]
+        
+        # Region & category slug:
+        # If region is populated create a tab for it, otherwise if already there group it with others
+        # If left blank, leaves category as "all"
+        region = desc_data["region"]
+        category_slug = slugify(region) if region else "all"
+        
+        # Is private?
+        is_private = (
+            summary_raw.lower().startswith("private") or
+            artist.lower() == "private" or
+            venue.lower() == "private" or
+            desc_data["tickets_flag"] is False
+        )
+        
+        # Ticket button rule:
+        # "if the event is labeled as a private event there should not be a button otherwise the only button there should say tickets"
+        # "Tickets/tickets: Y/N or y/n (this is for the buttons, could use a flag)"
+        # "If any are left blank just leave their section empty"
+        if is_private or desc_data["tickets_flag"] is not True:
+            has_tickets = False
         else:
-            category = "all"
-            
-        is_private = "private" in summary.lower() or "private" in venue.lower()
-        ticket_url = desc_data["tickets"] or "#contact"
-        action_label = "Private Event" if is_private else ("Tickets" if desc_data["tickets"] else "Tickets")
+            has_tickets = True
+
+        ticket_url = desc_data["link"] or "#contact"
 
         cal_events.append({
             "isoDate": dt.isoformat(),
@@ -293,20 +278,55 @@ def fetch_google_calendar_events():
             "day": dt.strftime("%d"),
             "weekday": dt.strftime("%a").upper(),
             "year": dt.strftime("%Y"),
-            "summary": summary,
+            "summary": summary_raw,
             "city": city,
             "country": country,
+            "venueLocation": venue_location,
             "artist": artist,
+            "optionalLink": desc_data["optional_link"],
             "venue": venue,
-            "tag": tag,
-            "category": category,
+            "tourName": tour_name,
+            "region": region,
+            "category": category_slug,
+            "hasTickets": has_tickets,
             "ticketUrl": ticket_url,
-            "actionLabel": action_label,
-            "isPrivate": is_private,
             "source": "calendar"
         })
         
     return cal_events
+
+def generate_filter_bar_html(events):
+    """
+    Builds the category filter pills:
+    - Always starts with 'All Dates'
+    - Dynamically generates tabs for each unique populated Region (e.g. 'North America', 'Europe')
+    - If multiple events share a region, they are grouped under that single tab
+    - If no regions are populated, only 'All Dates' is displayed
+    """
+    seen_slugs = set()
+    regions = []
+    for ev in events:
+        reg = ev.get("region", "").strip()
+        if reg:
+            slug = slugify(reg)
+            if slug and slug not in seen_slugs and slug != "all":
+                seen_slugs.add(slug)
+                regions.append((slug, reg))
+                
+    buttons = [
+        '<button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>'
+    ]
+    for slug, label in regions:
+        escaped_label = label.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        buttons.append(
+            f'<button class="filter-pill" role="tab" aria-selected="false" data-filter="{slug}">{escaped_label}</button>'
+        )
+        
+    pills_html = "\n            ".join(buttons)
+    return f"""          <!-- Category Filter Pills (ARIA Tablist pattern) -->
+          <div class="tour-filter-bar" role="tablist" aria-label="Tour category filter" style="display: flex !important; align-items: center !important; gap: 0.75rem !important; flex: 1 1 auto !important; min-width: 0 !important; overflow-x: auto !important; overflow-y: hidden !important; white-space: nowrap !important; flex-wrap: nowrap !important; margin: 0 !important;">
+            {pills_html}
+          </div>"""
 
 def generate_tour_cards_html(events):
     empty_style = "display: flex;" if len(events) == 0 else "display: none;"
@@ -333,38 +353,69 @@ def generate_tour_cards_html(events):
 
     cards_html = [empty_html]
     for i, ev in enumerate(events, 1):
-        target_attr = ' target="_blank" rel="noopener noreferrer"' if ev["ticketUrl"].startswith("http") else ''
-        aria_label = f"Inquire about {ev['month']} {ev['day']} {ev['summary']} in {ev['city']}" if ev['isPrivate'] else f"Get tickets for {ev['month']} {ev['day']} at {ev['venue']} {ev['city']}"
+        # 1. Location Column elements:
+        # City (Event Title)
+        city_html = f'<span class="tour-city">{ev["city"]}</span>' if ev.get("city") else ''
+        # Country (from Country:)
+        country_html = f'\n              <span class="tour-country">{ev["country"]}</span>' if ev.get("country") else ''
+        # Venue Location (added below country!)
+        venue_loc_html = f'\n              <span class="tour-venue-location">{ev["venueLocation"]}</span>' if ev.get("venueLocation") else ''
         
+        location_inner = f"{city_html}{country_html}{venue_loc_html}".strip()
+        location_col_html = f"""\n            <div class="tour-location-col">
+              {location_inner}
+            </div>""" if location_inner else '\n            <div class="tour-location-col"></div>'
+
+        # 2. Venue Column elements:
+        # Artist: hyperlinked if optionalLink provided, else plain text
+        if ev.get("artist"):
+            if ev.get("optionalLink"):
+                artist_content = f'<a href="{ev["optionalLink"]}" target="_blank" rel="noopener noreferrer" class="tour-artist-link">{ev["artist"]}</a>'
+            else:
+                artist_content = ev["artist"]
+            artist_html = f'\n              <span class="tour-artist-name">{artist_content}</span>'
+        else:
+            artist_html = ''
+
+        # Venue element
+        venue_html = f'\n              <span class="tour-venue">{ev["venue"]}</span>' if ev.get("venue") else ''
+
+        # Tour Name element
+        tour_name_html = f'\n              <span class="tour-details-tag">\n                {ev["tourName"]}\n              </span>' if ev.get("tourName") else ''
+
+        venue_inner = f"{artist_html}{venue_html}{tour_name_html}".strip()
+        venue_col_html = f"""\n            <div class="tour-venue-col">
+              {venue_inner}
+            </div>""" if venue_inner else '\n            <div class="tour-venue-col"></div>'
+
+        # 3. Action Column element: ticket button ONLY if hasTickets is True. No button for private / unticketed!
+        if ev.get("hasTickets"):
+            target_attr = ' target="_blank" rel="noopener noreferrer"' if ev.get("ticketUrl", "").startswith("http") else ''
+            aria_label = f"Get tickets for {ev['month']} {ev['day']} in {ev['city']}"
+            ticket_url = ev.get("ticketUrl") or "#contact"
+            action_html = f"""\n            <div class="tour-action-col">
+              <a href="{ticket_url}" class="btn btn-primary"{target_attr} aria-label="{aria_label}">
+                Tickets
+              </a>
+            </div>"""
+        else:
+            action_html = """\n            <div class="tour-action-col">
+              <!-- Private / un-ticketed event: no button -->
+            </div>"""
+
         # Paginate: Only show the first PAGE_SIZE (8) cards statically
         hide_style = ' style="display: none;"' if (i > PAGE_SIZE) else ''
         
-        card = f"""          <!-- Show {i}: {ev['city']} {ev['venue']} -->
-          <article class="tour-card" data-category="{ev['category']}" data-tour-index="{i - 1}"{hide_style}>
+        region_attr = f' data-region="{ev["region"]}"' if ev.get("region") else ''
+        
+        card = f"""          <!-- Show {i}: {ev['city']} -->
+          <article class="tour-card" data-category="{ev['category']}"{region_attr} data-date="{ev['isoDate']}" data-tour-index="{i - 1}"{hide_style}>
             <div class="tour-date-col">
               <span class="tour-month">{ev['month']}</span>
               <span class="tour-day">{ev['day']}</span>
               <span class="tour-weekday">{ev['weekday']}</span>
-            </div>
-            
-            <div class="tour-location-col">
-              <span class="tour-city">{ev['city']}</span>
-              <span class="tour-country">{ev['country']}</span>
-            </div>
-
-            <div class="tour-venue-col">
-              <span class="tour-artist-name">{ev['artist']}</span>
-              <span class="tour-venue">{ev['venue']}</span>
-              <span class="tour-details-tag">
-                {ev['tag']}
-              </span>
-            </div>
-
-            <div class="tour-action-col">
-              <a href="{ev['ticketUrl']}" class="btn btn-primary"{target_attr} aria-label="{aria_label}">
-                {ev['actionLabel']}
-              </a>
-            </div>
+            </div>{location_col_html}
+{venue_col_html}{action_html}
           </article>"""
         cards_html.append(card)
         
@@ -419,18 +470,12 @@ def main():
         print(f"      [WARN] Failed to fetch Google Calendar feed: {e}")
         cal_events = []
 
-    # Merge calendar events with base European shows (calendar takes precedence if same city/date)
+    # USER RULE: Only pick up dates from Google Calendar (no hardcoded shows)
     all_events = list(cal_events)
-    cal_keys = {(e["city"].lower(), e["month"], e["day"]) for e in cal_events}
-    
-    for base_ev in BASE_EUROPE_SHOWS:
-        key = (base_ev["city"].lower(), base_ev["month"], base_ev["day"])
-        if key not in cal_keys:
-            all_events.append(base_ev)
             
-    # Sort chronologically
+    # USER RULE: Tour dates sorted by date (default ascending)
     all_events.sort(key=lambda e: e["isoDate"])
-    print(f"[2/4] Total tour events: {len(all_events)} (Paginated at max {PAGE_SIZE} per page)")
+    print(f"[2/4] Total live Google Calendar events: {len(all_events)} (Sorted by date)")
 
     # Write assets/tour-dates.json
     print(f"[3/4] Writing {json_path}...")
@@ -443,18 +488,28 @@ def main():
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
 
+    # 1. Update filter pills bar based on populated regions
+    filters_html = generate_filter_bar_html(all_events)
+    filter_start = "<!-- TOUR_FILTERS_START -->"
+    filter_end = "<!-- TOUR_FILTERS_END -->"
+
+    if filter_start in content and filter_end in content:
+        filter_pattern = re.compile(rf"{re.escape(filter_start)}.*?{re.escape(filter_end)}", re.DOTALL)
+        content = filter_pattern.sub(f"{filter_start}\n{filters_html}\n          {filter_end}", content)
+    else:
+        m = re.search(r'(<div class="tour-filter-bar"[^>]*>.*?</div>)', content, re.DOTALL)
+        if m:
+            content = content[:m.start()] + f"{filter_start}\n{filters_html}\n          {filter_end}" + content[m.end():]
+
+    # 2. Update tour cards
     cards_html = generate_tour_cards_html(all_events)
-    pagination_html = generate_pagination_html(len(all_events))
-    
     start_marker = "<!-- TOUR_DATES_START -->"
     end_marker = "<!-- TOUR_DATES_END -->"
 
     if start_marker in content and end_marker in content:
         pattern = re.compile(rf"{re.escape(start_marker)}.*?{re.escape(end_marker)}", re.DOTALL)
-        replacement = f"{start_marker}\n{cards_html}\n          {end_marker}"
-        content = pattern.sub(replacement, content)
+        content = pattern.sub(f"{start_marker}\n{cards_html}\n          {end_marker}", content)
     else:
-        # First time insertion
         list_match = re.search(r'(<div class="tour-list"[^>]*>)(.*?)(</div>\s*</div>\s*</section>)', content, re.DOTALL)
         if list_match:
             open_tag = list_match.group(1)
@@ -462,7 +517,8 @@ def main():
             new_block = f"{open_tag}\n          {start_marker}\n{cards_html}\n          {end_marker}\n        {close_tags}"
             content = content[:list_match.start()] + new_block + content[list_match.end():]
 
-    # Ensure Pagination block is present right after </div> of .tour-list
+    # 3. Update pagination
+    pagination_html = generate_pagination_html(len(all_events))
     pag_start = "<!-- TOUR_PAGINATION_START -->"
     pag_end = "<!-- TOUR_PAGINATION_END -->"
     pag_block = f"{pag_start}\n{pagination_html}\n        {pag_end}"
@@ -471,30 +527,14 @@ def main():
         pag_pattern = re.compile(rf"{re.escape(pag_start)}.*?{re.escape(pag_end)}", re.DOTALL)
         content = pag_pattern.sub(pag_block, content)
     else:
-        # Insert after </div> of tour-list
-        tour_list_close = '</div>\n\n      </div>\n    </section>'
-        if tour_list_close in content:
-            replacement = f'</div>\n\n        {pag_block}\n\n      </div>\n    </section>'
-            content = content.replace(tour_list_close, replacement, 1)
-        else:
-            # Fallback regex search
-            m = re.search(r'(<!-- TOUR_DATES_END -->\s*</div>)', content)
-            if m:
-                content = content[:m.end()] + f"\n\n        {pag_block}" + content[m.end():]
-
-    # Ensure North America filter button is present
-    if 'data-filter="us"' not in content:
-        filter_target = '<button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>'
-        filter_replacement = (
-            '<button class="filter-pill active" role="tab" aria-selected="true" data-filter="all">All Dates</button>\n'
-            '          <button class="filter-pill" role="tab" aria-selected="false" data-filter="us">North America</button>'
-        )
-        content = content.replace(filter_target, filter_replacement)
+        m = re.search(r'(<!-- TOUR_DATES_END -->\s*</div>)', content)
+        if m:
+            content = content[:m.end()] + f"\n\n        {pag_block}" + content[m.end():]
 
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(content)
 
-    print("      index.html updated successfully with pagination & empty state support!")
+    print("      index.html updated successfully with dynamic region tabs & new scrape format!")
 
 if __name__ == "__main__":
     main()

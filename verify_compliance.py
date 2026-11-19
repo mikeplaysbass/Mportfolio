@@ -55,7 +55,7 @@ def test_compliance():
     for src in srcs:
         if src.startswith('http'):
             continue
-        cleaned_path = urllib.parse.unquote(src)
+        cleaned_path = urllib.parse.unquote(src).split('?')[0]
         if not os.path.exists(cleaned_path):
             errors.append(f"Referenced asset not found on disk: {cleaned_path}")
 
