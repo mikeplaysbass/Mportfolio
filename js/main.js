@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * 0. Hero Background Looping Video & Reduced Motion Control
+ * 0. Hero Background Looping Video & Reduced Motion Control (Safari / WebKit Autoplay Optimized)
  */
 function initHeroVideo() {
   const video = document.getElementById('hero-video');
@@ -29,35 +29,66 @@ function initHeroVideo() {
   const playIcon = document.getElementById('hero-play-icon');
   const toggleText = document.getElementById('hero-video-toggle-text');
 
-  if (!video || !toggleBtn) return;
+  if (!video) return;
+
+  // WebKit / Safari inline autoplay requirements
+  video.muted = true;
+  video.defaultMuted = true;
+  video.setAttribute('muted', '');
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+
+  function updateToggleUI(isPlaying) {
+    if (pauseIcon) pauseIcon.style.display = isPlaying ? 'block' : 'none';
+    if (playIcon) playIcon.style.display = isPlaying ? 'none' : 'block';
+    if (toggleText) toggleText.textContent = isPlaying ? 'Pause Video' : 'Play Video';
+    if (toggleBtn) toggleBtn.setAttribute('aria-label', isPlaying ? 'Pause background video' : 'Play background video');
+  }
+
+  video.addEventListener('play', () => updateToggleUI(true));
+  video.addEventListener('pause', () => updateToggleUI(false));
 
   // Respect system-level reduced motion preference
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion) {
     video.pause();
-    if (pauseIcon && playIcon && toggleText) {
-      pauseIcon.style.display = 'none';
-      playIcon.style.display = 'block';
-      toggleText.textContent = 'Play Video';
-      toggleBtn.setAttribute('aria-label', 'Play background video');
+    updateToggleUI(false);
+  } else {
+    // Attempt playback immediately for WebKit / Safari
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          updateToggleUI(true);
+        })
+        .catch(() => {
+          // Safari Low Power Mode or autoplay block:
+          // Start playing on the very first touch, click, or scroll
+          updateToggleUI(false);
+          const startOnInteraction = () => {
+            video.muted = true;
+            video.play().catch(() => {});
+            ['touchstart', 'click', 'scroll'].forEach(evt => {
+              window.removeEventListener(evt, startOnInteraction);
+            });
+          };
+          ['touchstart', 'click', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, startOnInteraction, { once: true, passive: true });
+          });
+        });
     }
   }
 
-  toggleBtn.addEventListener('click', () => {
-    if (video.paused) {
-      video.play();
-      if (pauseIcon) pauseIcon.style.display = 'block';
-      if (playIcon) playIcon.style.display = 'none';
-      if (toggleText) toggleText.textContent = 'Pause Video';
-      toggleBtn.setAttribute('aria-label', 'Pause background video');
-    } else {
-      video.pause();
-      if (pauseIcon) pauseIcon.style.display = 'none';
-      if (playIcon) playIcon.style.display = 'block';
-      if (toggleText) toggleText.textContent = 'Play Video';
-      toggleBtn.setAttribute('aria-label', 'Play background video');
-    }
-  });
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+  }
 }
 
 /**
